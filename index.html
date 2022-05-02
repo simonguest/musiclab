@@ -1,0 +1,61 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>WebAudio Test</title>
+    <meta name="description" content="WebAudio Test">
+    <meta name="author" content="Simon Guest">
+    <!-- link rel="stylesheet" href="css/styles.css?v=1.0"-->
+</head>
+
+<body>
+<h1>WebAudio Test</h1>
+<button id="play">Play Drum</button>
+<script>
+    const loadFile = async (filename) => {
+        const response = await fetch(filename);
+        if (!response.ok) {
+            console.error(`HTTP Error: ${response.status}`);
+        }
+        return await response.arrayBuffer();
+    }
+
+    const loadSamples = async (audioContext, filenames) => {
+        return new Promise((resolve) => {
+            let samples = new Map();
+            filenames.forEach(async (filename) => {
+                let buffer = await loadFile(filename);
+                let decodedBuffer = await audioContext.decodeAudioData(buffer);
+                let sampleName = /.+\/(.*).wav/.exec(filename)[1];
+                samples.set(sampleName, decodedBuffer);
+            });
+            resolve(samples);
+        });
+    }
+
+    async function start() {
+        let context = new window.AudioContext();
+        console.log(context);
+
+        let samples = await loadSamples(context, ["./samples/snare.wav", "./samples/hihat.wav"]);
+        console.log(samples);
+
+        document.getElementById("play").onclick = () => {
+            console.log("play button pressed");
+            let src = context.createBufferSource();
+            src.buffer = samples.get("snare");
+            src.connect(context.destination);
+            let src2 = context.createBufferSource();
+            src2.buffer = samples.get("hihat");
+            src2.connect(context.destination);
+            src.start(context.currentTime);
+            src2.start(0.5 + context.currentTime);
+        }
+    }
+
+    start();
+</script>
+</body>
+
+</html>
