@@ -11,7 +11,11 @@
 
 <body>
 <h1>WebAudio Test</h1>
-<button id="play">Play Drum</button>
+<button id="play">Play</button>
+<button id="pause">Pause</button>
+<button id="resume">Resume</button>
+<button id="stop">Stop</button>
+
 <script>
     const loadFile = async (filename) => {
         const response = await fetch(filename);
@@ -29,28 +33,58 @@
                 let decodedBuffer = await audioContext.decodeAudioData(buffer);
                 let sampleName = /.+\/(.*).wav/.exec(filename)[1];
                 samples.set(sampleName, decodedBuffer);
+                console.log(`Added ${sampleName} to audio samples.`);
             });
             resolve(samples);
         });
+    }
+
+    const playSample = (context, samples, name, timeOffset) => {
+        let src = context.createBufferSource();
+        src.buffer = samples.get(name);
+        src.connect(context.destination);
+        src.start(timeOffset + context.currentTime);
+    }
+
+    const playDrumClip = (context, samples, tempo) =>
+    {
+        const eighthNote = (60 / tempo) /2;
+        for (let r = 0; r < 3; r ++) {
+            for (let i = 0; i < 8; i++) {
+                playSample(context, samples, "hihat", i * eighthNote + (r * 8 * eighthNote));
+                if (i % 4 === 0) playSample(context, samples, "kick", i * eighthNote + (r * 8 * eighthNote));
+                if (i % 4 - 2 === 0) playSample(context, samples, "snare", i * eighthNote + (r * 8 * eighthNote));
+            }
+        }
     }
 
     async function start() {
         let context = new window.AudioContext();
         console.log(context);
 
-        let samples = await loadSamples(context, ["./samples/snare.wav", "./samples/hihat.wav"]);
+        let samples = await loadSamples(context, ["./samples/snare.wav", "./samples/hihat.wav", "./samples/kick.wav"]);
         console.log(samples);
 
         document.getElementById("play").onclick = () => {
             console.log("play button pressed");
-            let src = context.createBufferSource();
-            src.buffer = samples.get("snare");
-            src.connect(context.destination);
-            let src2 = context.createBufferSource();
-            src2.buffer = samples.get("hihat");
-            src2.connect(context.destination);
-            src.start(context.currentTime);
-            src2.start(0.5 + context.currentTime);
+            context = new window.AudioContext();
+            const TEMPO = 80; //bpm
+            playDrumClip(context, samples, TEMPO);
+        }
+
+        document.getElementById("pause").onclick = () => {
+            console.log("pause button pressed");
+            context.suspend();
+        }
+
+        document.getElementById("resume").onclick = () => {
+            console.log("resume button pressed");
+            context.resume();
+        }
+
+        document.getElementById("stop").onclick = () => {
+            console.log("stop button pressed");
+            context.close();
         }
     }
 
