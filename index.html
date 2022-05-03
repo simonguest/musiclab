@@ -6,17 +6,42 @@
     <title>WebAudio Test</title>
     <meta name="description" content="WebAudio Test">
     <meta name="author" content="Simon Guest">
+    <script src="./lib/blockly.min.js"></script>
     <!-- link rel="stylesheet" href="css/styles.css?v=1.0"-->
 </head>
 
 <body>
-<h1>WebAudio Test</h1>
+<h1>WebAudio and Blockly</h1>
+<div id="workspace" style="height: 480px; width: 800px;"></div>
 <button id="play">Play</button>
 <button id="pause">Pause</button>
 <button id="resume">Resume</button>
 <button id="stop">Stop</button>
 
-<script>
+<script type="module">
+    import {toolbox} from "./blocks/toolbox.js";
+    import {playSample as playSampleBlock} from "./blocks/playSample.js";
+    Blockly.Blocks['playSample'] = playSampleBlock;
+    Blockly.JavaScript['playSample'] = playSampleBlock.transpile;
+    import {snare as snareBlock} from "./blocks/drums/snare.js";
+    Blockly.Blocks['snare'] = snareBlock;
+    Blockly.JavaScript['snare'] = snareBlock.transpile;
+    import {kick as kickBlock} from "./blocks/drums/kick.js";
+    Blockly.Blocks['kick'] = kickBlock;
+    Blockly.JavaScript['kick'] = kickBlock.transpile;
+    import {hihat as hihatBlock} from "./blocks/drums/hihat.js";
+    Blockly.Blocks['hihat'] = hihatBlock;
+    Blockly.JavaScript['hihat'] = hihatBlock.transpile;
+
+    let workspace = Blockly.inject('workspace', {toolbox: toolbox});
+    workspace.addChangeListener((ev) => {
+       if ((ev.type === Blockly.Events.BLOCK_MOVE) || (ev.type === Blockly.Events.BLOCK_CHANGE) || (ev.type === Blockly.Events.BLOCK_DELETE)){
+           console.log("Writing workspace to session storage");
+           let json = Blockly.serialization.workspaces.save(workspace);
+           sessionStorage.setItem("workspace", JSON.stringify(json));
+       }
+    });
+
     const loadFile = async (filename) => {
         const response = await fetch(filename);
         if (!response.ok) {
@@ -59,6 +84,10 @@
     }
 
     async function start() {
+        console.log("Loading workspace from session storage");
+        let jsonStr = sessionStorage.getItem("workspace");
+        if (jsonStr) Blockly.serialization.workspaces.load(JSON.parse(jsonStr), workspace);
+
         let context = new window.AudioContext();
         console.log(context);
 
@@ -67,9 +96,15 @@
 
         document.getElementById("play").onclick = () => {
             console.log("play button pressed");
+
+            // Generate the required code
+            let code = Blockly.JavaScript.workspaceToCode(workspace);
+            console.log(code);
+
             context = new window.AudioContext();
             const TEMPO = 80; //bpm
-            playDrumClip(context, samples, TEMPO);
+            eval(code);
+            //playDrumClip(context, samples, TEMPO);
         }
 
         document.getElementById("pause").onclick = () => {
@@ -86,6 +121,7 @@
             console.log("stop button pressed");
             context.close();
         }
+
     }
 
     start();
