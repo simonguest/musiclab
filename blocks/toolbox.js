@@ -87,6 +87,10 @@ export let toolbox = {
                 },
                 {
                     "kind":"block",
+                    "type":"playNote"
+                },
+                {
+                    "kind":"block",
                     "type":"clip"
                 },
                 {
@@ -119,6 +123,20 @@ export let toolbox = {
                 },{
                     "kind":"block",
                     "type":"hihat"
+                }
+            ]
+        },
+        {
+            "kind":"category",
+            "name":"Notes",
+            "contents":[
+                {
+                    "kind":"block",
+                    "type":"c4"
+                },
+                {
+                    "kind":"block",
+                    "type":"g4"
                 }
             ]
         },

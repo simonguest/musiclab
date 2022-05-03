@@ -4,6 +4,7 @@ export let sleep = {
             .setCheck("Number")
             .setAlign(Blockly.ALIGN_CENTRE)
             .appendField("Sleep");
+        this.setInputsInline(true);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(230);

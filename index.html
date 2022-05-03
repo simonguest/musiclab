@@ -25,6 +25,9 @@
     import {playSample as playSampleBlock} from "./blocks/playSample.js";
     Blockly.Blocks['playSample'] = playSampleBlock;
     Blockly.JavaScript['playSample'] = playSampleBlock.transpile;
+    import {playNote as playNoteBlock} from "./blocks/playNote.js";
+    Blockly.Blocks['playNote'] = playNoteBlock;
+    Blockly.JavaScript['playNote'] = playNoteBlock.transpile;
     import {clip as clipBlock} from "./blocks/clip.js";
     Blockly.Blocks['clip'] = clipBlock;
     Blockly.JavaScript['clip'] = clipBlock.transpile;
@@ -41,6 +44,13 @@
     import {hihat as hihatBlock} from "./blocks/drums/hihat.js";
     Blockly.Blocks['hihat'] = hihatBlock;
     Blockly.JavaScript['hihat'] = hihatBlock.transpile;
+
+    import {c4 as c4Block} from "./blocks/notes/c4.js";
+    Blockly.Blocks['c4'] = c4Block;
+    Blockly.JavaScript['c4'] = c4Block.transpile;
+    import {g4 as g4Block} from "./blocks/notes/g4.js";
+    Blockly.Blocks['g4'] = g4Block;
+    Blockly.JavaScript['g4'] = g4Block.transpile;
 
     let workspace = Blockly.inject('workspace', {toolbox: toolbox});
     workspace.addChangeListener((ev) => {
@@ -81,25 +91,18 @@
         src.start(timeOffset + context.currentTime);
     }
 
+    const playNote = (context, note, timeOffset, duration) => {
+        let osc = context.createOscillator();
+        osc.connect(context.destination);
+        osc.type = "sine";
+        osc.frequency.value = note;
+        osc.start(context.currentTime + timeOffset);
+        osc.stop(context.currentTime + timeOffset + duration);
+    }
+
     const playDebugClip = (context, samples, tempo) =>
     {
-        for (let i = 0; i < 8; i++) {
-            var timeIndex = timeIndex || 0;
-            playSample(context, samples, "snare", timeIndex);
-            // emulate sleep 1
-            var timeIndex = timeIndex || 0;
-            timeIndex += 1;
-            var timeIndex = timeIndex || 0;
-            playSample(context, samples, "snare", timeIndex);
-        }
-        // const eighthNote = (60 / tempo) /2;
-        // for (let r = 0; r < 3; r ++) {
-        //     for (let i = 0; i < 8; i++) {
-        //         playSample(context, samples, "hihat", i * eighthNote + (r * 8 * eighthNote));
-        //         if (i % 4 === 0) playSample(context, samples, "kick", i * eighthNote + (r * 8 * eighthNote));
-        //         if (i % 4 - 2 === 0) playSample(context, samples, "snare", i * eighthNote + (r * 8 * eighthNote));
-        //     }
-        // }
+        playNote(context, 261.625565300598634, 0, 0.5);
     }
 
     async function start() {
