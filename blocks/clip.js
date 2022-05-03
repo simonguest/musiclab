@@ -6,6 +6,8 @@ export let clip = {
             this.appendStatementInput("STATEMENTS")
                 .setCheck(null);
             this.setInputsInline(true);
+            this.setPreviousStatement(true, null);
+            this.setNextStatement(true, null);
             this.setColour(230);
             this.setTooltip("");
             this.setHelpUrl("");
@@ -13,7 +15,7 @@ export let clip = {
 
     transpile: function (block) {
         let statements = Blockly.JavaScript.statementToCode(block, 'STATEMENTS');
-        let code = `${statements}`;
+        let code = `var timeIndex = 0; ${statements}`;
         return code;
     }
 };
