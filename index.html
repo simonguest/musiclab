@@ -17,12 +17,21 @@
 <button id="pause">Pause</button>
 <button id="resume">Resume</button>
 <button id="stop">Stop</button>
+<button id="debug">Debug</button>
+<button id="clear">Clear Session</button>
 
 <script type="module">
     import {toolbox} from "./blocks/toolbox.js";
     import {playSample as playSampleBlock} from "./blocks/playSample.js";
     Blockly.Blocks['playSample'] = playSampleBlock;
     Blockly.JavaScript['playSample'] = playSampleBlock.transpile;
+    import {clip as clipBlock} from "./blocks/clip.js";
+    Blockly.Blocks['clip'] = clipBlock;
+    Blockly.JavaScript['clip'] = clipBlock.transpile;
+    import {sleep as sleepBlock} from "./blocks/sleep.js";
+    Blockly.Blocks['sleep'] = sleepBlock;
+    Blockly.JavaScript['sleep'] = sleepBlock.transpile;
+
     import {snare as snareBlock} from "./blocks/drums/snare.js";
     Blockly.Blocks['snare'] = snareBlock;
     Blockly.JavaScript['snare'] = snareBlock.transpile;
@@ -67,20 +76,30 @@
     const playSample = (context, samples, name, timeOffset) => {
         let src = context.createBufferSource();
         src.buffer = samples.get(name);
+        console.log(src);
         src.connect(context.destination);
         src.start(timeOffset + context.currentTime);
     }
 
-    const playDrumClip = (context, samples, tempo) =>
+    const playDebugClip = (context, samples, tempo) =>
     {
-        const eighthNote = (60 / tempo) /2;
-        for (let r = 0; r < 3; r ++) {
-            for (let i = 0; i < 8; i++) {
-                playSample(context, samples, "hihat", i * eighthNote + (r * 8 * eighthNote));
-                if (i % 4 === 0) playSample(context, samples, "kick", i * eighthNote + (r * 8 * eighthNote));
-                if (i % 4 - 2 === 0) playSample(context, samples, "snare", i * eighthNote + (r * 8 * eighthNote));
-            }
+        for (let i = 0; i < 8; i++) {
+            var timeIndex = timeIndex || 0;
+            playSample(context, samples, "snare", timeIndex);
+            // emulate sleep 1
+            var timeIndex = timeIndex || 0;
+            timeIndex += 1;
+            var timeIndex = timeIndex || 0;
+            playSample(context, samples, "snare", timeIndex);
         }
+        // const eighthNote = (60 / tempo) /2;
+        // for (let r = 0; r < 3; r ++) {
+        //     for (let i = 0; i < 8; i++) {
+        //         playSample(context, samples, "hihat", i * eighthNote + (r * 8 * eighthNote));
+        //         if (i % 4 === 0) playSample(context, samples, "kick", i * eighthNote + (r * 8 * eighthNote));
+        //         if (i % 4 - 2 === 0) playSample(context, samples, "snare", i * eighthNote + (r * 8 * eighthNote));
+        //     }
+        // }
     }
 
     async function start() {
@@ -120,6 +139,16 @@
         document.getElementById("stop").onclick = () => {
             console.log("stop button pressed");
             context.close();
+        }
+
+        document.getElementById("debug").onclick = () => {
+            console.log("debug button pressed");
+            playDebugClip(context, samples, 80);
+        }
+
+        document.getElementById("clear").onclick = () => {
+            console.log("clear session button pressed");
+            sessionStorage.removeItem("workspace");
         }
 
     }

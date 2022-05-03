@@ -4,10 +4,6 @@ export let playSample = {
             .appendField("Play Sample");
         this.appendValueInput("SAMPLE")
             .setCheck(null);
-        this.appendValueInput("OFFSET")
-            .setCheck("Number")
-            .appendField("Offset");
-        this.setInputsInline(true);
         this.setInputsInline(true);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
@@ -18,8 +14,7 @@ export let playSample = {
 
     transpile: function (block) {
         let sample = Blockly.JavaScript.valueToCode(block, 'SAMPLE', Blockly.JavaScript.ORDER_NONE);
-        let offset = Blockly.JavaScript.valueToCode(block, 'OFFSET', Blockly.JavaScript.ORDER_NONE);
-        let code = `playSample(context, samples, ${sample}, ${offset});`;
+        let code = `var timeIndex = timeIndex || 0; playSample(context, samples, ${sample}, timeIndex);`;
         return code;
     }
 };

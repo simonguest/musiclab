@@ -74,6 +74,24 @@ export let toolbox = {
                 {
                     "kind":"block",
                     "type":"playSample"
+                },
+                {
+                    "kind":"block",
+                    "type":"clip"
+                },
+                {
+                    "kind":"block",
+                    "type":"sleep",
+                    "inputs": {
+                        "DURATION": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 1
+                                }
+                            }
+                        }
+                    }
                 }
             ]
         },
