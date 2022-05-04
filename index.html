@@ -45,13 +45,6 @@
     Blockly.Blocks['hihat'] = hihatBlock;
     Blockly.JavaScript['hihat'] = hihatBlock.transpile;
 
-    import {c4 as c4Block} from "./blocks/notes/c4.js";
-    Blockly.Blocks['c4'] = c4Block;
-    Blockly.JavaScript['c4'] = c4Block.transpile;
-    import {g4 as g4Block} from "./blocks/notes/g4.js";
-    Blockly.Blocks['g4'] = g4Block;
-    Blockly.JavaScript['g4'] = g4Block.transpile;
-
     let workspace = Blockly.inject('workspace', {toolbox: toolbox});
     workspace.addChangeListener((ev) => {
        if ((ev.type === Blockly.Events.BLOCK_MOVE) || (ev.type === Blockly.Events.BLOCK_CHANGE) || (ev.type === Blockly.Events.BLOCK_DELETE)){
