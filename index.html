@@ -21,37 +21,30 @@
 <button id="clear">Clear Session</button>
 
 <script type="module">
-    import {toolbox} from "./blocks/toolbox.js";
-    import {playSample as playSampleBlock} from "./blocks/playSample.js";
-    Blockly.Blocks['playSample'] = playSampleBlock;
-    Blockly.JavaScript['playSample'] = playSampleBlock.transpile;
-    import {playNote as playNoteBlock} from "./blocks/playNote.js";
-    Blockly.Blocks['playNote'] = playNoteBlock;
-    Blockly.JavaScript['playNote'] = playNoteBlock.transpile;
-    import {clip as clipBlock} from "./blocks/clip.js";
-    Blockly.Blocks['clip'] = clipBlock;
-    Blockly.JavaScript['clip'] = clipBlock.transpile;
-    import {sleep as sleepBlock} from "./blocks/sleep.js";
-    Blockly.Blocks['sleep'] = sleepBlock;
-    Blockly.JavaScript['sleep'] = sleepBlock.transpile;
+    const createCustomBlock = (name, blockType) => {
+        Blockly.Blocks[name] = blockType;
+        Blockly.JavaScript[name] = blockType["transpile"];
+    }
 
-    import {snare as snareBlock} from "./blocks/drums/snare.js";
-    Blockly.Blocks['snare'] = snareBlock;
-    Blockly.JavaScript['snare'] = snareBlock.transpile;
-    import {kick as kickBlock} from "./blocks/drums/kick.js";
-    Blockly.Blocks['kick'] = kickBlock;
-    Blockly.JavaScript['kick'] = kickBlock.transpile;
-    import {hihat as hihatBlock} from "./blocks/drums/hihat.js";
-    Blockly.Blocks['hihat'] = hihatBlock;
-    Blockly.JavaScript['hihat'] = hihatBlock.transpile;
+    import * as control from "./blocks/control";
+    import * as percussion from "./blocks/percussion";
+    import {toolbox} from "./blocks/toolbox.js";
+
+    createCustomBlock("clip", control.clip);
+    createCustomBlock("playNote", control.playNote);
+    createCustomBlock("playSample", control.playSample);
+    createCustomBlock("sleep", control.sleep);
+    createCustomBlock("snare", percussion.snare);
+    createCustomBlock("kick", percussion.kick);
+    createCustomBlock("hihat", percussion.hihat);
 
     let workspace = Blockly.inject('workspace', {toolbox: toolbox});
     workspace.addChangeListener((ev) => {
-       if ((ev.type === Blockly.Events.BLOCK_MOVE) || (ev.type === Blockly.Events.BLOCK_CHANGE) || (ev.type === Blockly.Events.BLOCK_DELETE)){
-           console.log("Writing workspace to session storage");
-           let json = Blockly.serialization.workspaces.save(workspace);
-           sessionStorage.setItem("workspace", JSON.stringify(json));
-       }
+        if ((ev.type === Blockly.Events.BLOCK_MOVE) || (ev.type === Blockly.Events.BLOCK_CHANGE) || (ev.type === Blockly.Events.BLOCK_DELETE)) {
+            console.log("Writing workspace to session storage");
+            let json = Blockly.serialization.workspaces.save(workspace);
+            sessionStorage.setItem("workspace", JSON.stringify(json));
+        }
     });
 
     const loadFile = async (filename) => {
@@ -93,8 +86,7 @@
         osc.stop(context.currentTime + timeOffset + duration);
     }
 
-    const playDebugClip = (context, samples, tempo) =>
-    {
+    const playDebugClip = (context, samples, tempo) => {
         playNote(context, 261.625565300598634, 0, 0.5);
     }
 
@@ -119,7 +111,6 @@
             context = new window.AudioContext();
             const TEMPO = 80; //bpm
             eval(code);
-            //playDrumClip(context, samples, TEMPO);
         }
 
         document.getElementById("pause").onclick = () => {
