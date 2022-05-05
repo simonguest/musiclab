@@ -94,6 +94,7 @@
         let osc = context.createOscillator();
         osc.type = "sine";
         osc.frequency.value = note;
+        console.log(osc);
 
         var nextNode = context.createGain();
         nextNode.connect(context.destination);
@@ -127,7 +128,7 @@
             console.log(code);
 
             context = new window.AudioContext();
-            var volume = 1.0;
+            var volume = 100;
             eval(code);
         }
 

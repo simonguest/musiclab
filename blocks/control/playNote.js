@@ -18,7 +18,7 @@ export let playNote = {
     transpile: function (block) {
         let note = block.getFieldValue('NOTE');
         let duration = Blockly.JavaScript.valueToCode(block, 'DURATION', Blockly.JavaScript.ORDER_NONE);
-        let code = `var timeIndex = timeIndex || 0; playNote(context, ${note}, timeIndex, ${duration}, volume);`;
+        let code = `var timeIndex = timeIndex !== 'undefined' ? timeIndex : 0; var volume = volume !== 'undefined' ? volume : 100; playNote(context, ${note}, timeIndex, ${duration}, volume);`;
         return code;
     }
 };

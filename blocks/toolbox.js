@@ -87,7 +87,17 @@ export let toolbox = {
                 },
                 {
                     "kind":"block",
-                    "type":"playNote"
+                    "type":"playNote",
+                    "inputs": {
+                        "DURATION": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 1
+                                }
+                            }
+                        }
+                    }
                 },
                 {
                     "kind":"block",

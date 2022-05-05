@@ -6,8 +6,8 @@ export let track = {
             this.appendStatementInput("STATEMENTS")
                 .setCheck(null);
             this.setInputsInline(true);
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
+            this.setPreviousStatement(false, null);
+            this.setNextStatement(false, null);
             this.setColour(230);
             this.setTooltip("");
             this.setHelpUrl("");
