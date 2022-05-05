@@ -1,8 +1,8 @@
-export let clip = {
+export let track = {
     init: function () {
             this.appendDummyInput()
-                .appendField("Clip")
-                .appendField(new Blockly.FieldTextInput("Clip 1"), "NAME");
+                .appendField("Track")
+                .appendField(new Blockly.FieldTextInput("Track 1"), "NAME");
             this.appendStatementInput("STATEMENTS")
                 .setCheck(null);
             this.setInputsInline(true);

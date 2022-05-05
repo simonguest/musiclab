@@ -1,6 +1,7 @@
-import {clip} from "./clip.js";
+import {track} from "./track.js";
 import {playNote} from "./playNote.js";
 import {playSample} from "./playSample.js";
 import {sleep} from "./sleep.js";
+import {volume} from "./volume.js";
 
-export {clip, playNote, playSample, sleep};
+export {track, playNote, playSample, sleep, volume};

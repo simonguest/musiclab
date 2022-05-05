@@ -91,7 +91,7 @@ export let toolbox = {
                 },
                 {
                     "kind":"block",
-                    "type":"clip"
+                    "type":"track"
                 },
                 {
                     "kind":"block",
@@ -102,6 +102,20 @@ export let toolbox = {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind":"block",
+                    "type":"volume",
+                    "inputs": {
+                        "VOLUME": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 100
                                 }
                             }
                         }

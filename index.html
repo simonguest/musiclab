@@ -30,10 +30,11 @@
     import * as percussion from "./blocks/percussion";
     import {toolbox} from "./blocks/toolbox.js";
 
-    createCustomBlock("clip", control.clip);
+    createCustomBlock("track", control.track);
     createCustomBlock("playNote", control.playNote);
     createCustomBlock("playSample", control.playSample);
     createCustomBlock("sleep", control.sleep);
+    createCustomBlock("volume", control.volume);
     createCustomBlock("snare", percussion.snare);
     createCustomBlock("kick", percussion.kick);
     createCustomBlock("hihat", percussion.hihat);
@@ -69,19 +70,36 @@
         });
     }
 
-    const playSample = (context, samples, name, timeOffset) => {
+    const convertVolumeToUnitInterval = (volume) => {
+        // Convert volume to fixed point between 0 and 1 for the WebAudio API
+        volume = Math.abs(volume);
+        if (volume > 100) volume = 100;
+        return volume / 100;
+    }
+
+    const playSample = (context, samples, name, timeOffset, volume) => {
         let src = context.createBufferSource();
         src.buffer = samples.get(name);
         console.log(src);
-        src.connect(context.destination);
+
+        var nextNode = context.createGain();
+        nextNode.connect(context.destination);
+        nextNode.gain.value = convertVolumeToUnitInterval(volume);
+        src.connect(nextNode);
+
         src.start(timeOffset + context.currentTime);
     }
 
-    const playNote = (context, note, timeOffset, duration) => {
+    const playNote = (context, note, timeOffset, duration, volume) => {
         let osc = context.createOscillator();
-        osc.connect(context.destination);
         osc.type = "sine";
         osc.frequency.value = note;
+
+        var nextNode = context.createGain();
+        nextNode.connect(context.destination);
+        nextNode.gain.value = convertVolumeToUnitInterval(volume);
+        osc.connect(nextNode);
+
         osc.start(context.currentTime + timeOffset);
         osc.stop(context.currentTime + timeOffset + duration);
     }
@@ -109,7 +127,7 @@
             console.log(code);
 
             context = new window.AudioContext();
-            const TEMPO = 80; //bpm
+            var volume = 1.0;
             eval(code);
         }
 
@@ -130,7 +148,10 @@
 
         document.getElementById("debug").onclick = () => {
             console.log("debug button pressed");
-            playDebugClip(context, samples, 80);
+            context = new window.AudioContext();
+            var volume = 1;
+            playSample(context, samples, "snare", 0, volume);
+            //playDebugClip(context, samples, 80);
         }
 
         document.getElementById("clear").onclick = () => {
