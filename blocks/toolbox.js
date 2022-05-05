@@ -74,6 +74,10 @@ export let toolbox = {
               {
                   "kind": "block",
                   "type": "math_modulo"
+              },
+              {
+                  "kind":"block",
+                  "type":"math_random_int"
               }
           ]
         },

@@ -82,6 +82,8 @@
         src.buffer = samples.get(name);
         console.log(src);
 
+        console.log(volume);
+
         var nextNode = context.createGain();
         nextNode.connect(context.destination);
         nextNode.gain.value = convertVolumeToUnitInterval(volume);
