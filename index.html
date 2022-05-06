@@ -28,6 +28,7 @@
 
     import * as control from "./blocks/control";
     import * as percussion from "./blocks/percussion";
+    import * as looping from "./blocks/looping";
     import {toolbox} from "./blocks/toolbox.js";
 
     createCustomBlock("track", control.track);
@@ -35,9 +36,11 @@
     createCustomBlock("playSample", control.playSample);
     createCustomBlock("sleep", control.sleep);
     createCustomBlock("volume", control.volume);
+    createCustomBlock("filter", control.filter);
     createCustomBlock("snare", percussion.snare);
     createCustomBlock("kick", percussion.kick);
     createCustomBlock("hihat", percussion.hihat);
+    createCustomBlock("techno", looping.techno);
 
     let workspace = Blockly.inject('workspace', {toolbox: toolbox});
     workspace.addChangeListener((ev) => {
@@ -70,24 +73,30 @@
         });
     }
 
-    const convertVolumeToUnitInterval = (volume) => {
-        // Convert volume to fixed point between 0 and 1 for the WebAudio API
-        volume = Math.abs(volume);
-        if (volume > 100) volume = 100;
-        return volume / 100;
+    const convertToUnitInterval = (value) => {
+        // Convert value to fixed point between 0 and 1 for the WebAudio API
+        value = Math.abs(value);
+        if (value > 100) value = 100;
+        return value / 100;
     }
 
-    const playSample = (context, samples, name, timeOffset, volume) => {
+    const playSample = (context, samples, name, timeOffset, volume, filter) => {
         let src = context.createBufferSource();
         src.buffer = samples.get(name);
         console.log(src);
 
-        console.log(volume);
+        var gainNode = context.createGain();
+        gainNode.gain.value = convertToUnitInterval(volume);
+        gainNode.connect(context.destination);
 
-        var nextNode = context.createGain();
-        nextNode.connect(context.destination);
-        nextNode.gain.value = convertVolumeToUnitInterval(volume);
-        src.connect(nextNode);
+        var filterNode = context.createBiquadFilter();
+        filterNode.type = "lowpass";
+        var hz = (src.buffer.sampleRate / 4) * convertToUnitInterval(filter);
+        filterNode.frequency.value = hz;
+        console.log(filterNode);
+        filterNode.connect(gainNode);
+
+        src.connect(filterNode);
 
         src.start(timeOffset + context.currentTime);
     }
@@ -100,7 +109,7 @@
 
         var nextNode = context.createGain();
         nextNode.connect(context.destination);
-        nextNode.gain.value = convertVolumeToUnitInterval(volume);
+        nextNode.gain.value = convertToUnitInterval(volume);
         osc.connect(nextNode);
 
         osc.start(context.currentTime + timeOffset);
@@ -119,7 +128,7 @@
         let context = new window.AudioContext();
         console.log(context);
 
-        let samples = await loadSamples(context, ["./samples/snare.wav", "./samples/hihat.wav", "./samples/kick.wav"]);
+        let samples = await loadSamples(context, ["./samples/snare.wav", "./samples/hihat.wav", "./samples/kick.wav", "./samples/techno.wav", "./samples/techno2.wav"]);
         console.log(samples);
 
         document.getElementById("play").onclick = () => {

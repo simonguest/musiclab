@@ -77,7 +77,25 @@ export let toolbox = {
               },
               {
                   "kind":"block",
-                  "type":"math_random_int"
+                  "type":"math_random_int",
+                  "inputs": {
+                      "FROM": {
+                          "block": {
+                              "type": "math_number",
+                              "fields": {
+                                  "NUM": 1
+                              }
+                          }
+                      },
+                      "TO": {
+                          "block": {
+                              "type": "math_number",
+                              "fields": {
+                                  "NUM": 100
+                              }
+                          }
+                      }
+                  }
               }
           ]
         },
@@ -134,39 +152,55 @@ export let toolbox = {
                             }
                         }
                     }
+                },
+                {
+                    "kind":"block",
+                    "type":"filter",
+                    "inputs": {
+                        "FILTER": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 100
+                                }
+                            }
+                        }
+                    }
                 }
             ]
         },
         {
-            "kind":"category",
-            "name":"Drums",
-            "contents": [
-                {
-                    "kind":"block",
-                    "type":"snare"
-                },
-                {
-                    "kind":"block",
-                    "type":"kick"
-                },{
-                    "kind":"block",
-                    "type":"hihat"
-                }
-            ]
-        },
-        {
-            "kind":"category",
-            "name":"Notes",
-            "contents":[
-                {
-                    "kind":"block",
-                    "type":"c4"
-                },
-                {
-                    "kind":"block",
-                    "type":"g4"
-                }
-            ]
+          "kind":"category",
+          "name":"Samples",
+          "contents": [
+              {
+                  "kind":"category",
+                  "name":"Percussion",
+                  "contents": [
+                      {
+                          "kind":"block",
+                          "type":"snare"
+                      },
+                      {
+                          "kind":"block",
+                          "type":"kick"
+                      },{
+                          "kind":"block",
+                          "type":"hihat"
+                      }
+                  ]
+              },
+              {
+                  "kind":"category",
+                  "name":"Looping",
+                  "contents": [
+                      {
+                          "kind":"block",
+                          "type":"techno"
+                      }
+                  ]
+              }
+          ]
         },
         {
             "kind": "category",
