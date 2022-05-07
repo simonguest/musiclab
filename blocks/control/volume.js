@@ -5,7 +5,7 @@ export let volume = {
             .appendField("Set volume");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
-        this.setColour(230);
+        this.setColour(330);
         this.setTooltip("Volume is between 0 and 100");
         this.setHelpUrl("");
     },

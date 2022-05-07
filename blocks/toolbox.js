@@ -7,10 +7,6 @@ export let toolbox = {
             "contents": [
                 {
                     "kind": "block",
-                    "type": "controls_if"
-                },
-                {
-                    "kind": "block",
                     "type": "controls_repeat_ext",
                     "inputs": {
                         "TIMES": {
@@ -57,12 +53,18 @@ export let toolbox = {
         },
         {
           "kind":"category",
-          "name":"Math",
+          "name":"Logic",
           "contents":[
               {
                   "kind": "block",
                   "type": "logic_compare"
-              },
+              }
+          ]
+        },
+        {
+          "kind":"category",
+          "name":"Math",
+          "contents":[
               {
                   "kind": "block",
                   "type": "math_number"

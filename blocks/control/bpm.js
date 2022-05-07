@@ -5,7 +5,7 @@ export let bpm = {
             .appendField("Set bpm");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
-        this.setColour(230);
+        this.setColour(330);
         this.setTooltip("Beats per minute");
         this.setHelpUrl("");
     },

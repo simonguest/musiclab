@@ -8,7 +8,7 @@ export let track = {
             this.setInputsInline(true);
             this.setPreviousStatement(false, null);
             this.setNextStatement(false, null);
-            this.setColour(230);
+            this.setColour(330);
             this.setTooltip("");
             this.setHelpUrl("");
     },

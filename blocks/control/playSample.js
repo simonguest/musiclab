@@ -7,7 +7,7 @@ export let playSample = {
         this.setInputsInline(true);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
-        this.setColour(315);
+        this.setColour(330);
         this.setTooltip("");
         this.setHelpUrl("");
     },

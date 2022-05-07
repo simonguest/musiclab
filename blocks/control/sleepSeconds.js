@@ -9,7 +9,7 @@ export let sleepSeconds = {
         this.setInputsInline(true);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
-        this.setColour(230);
+        this.setColour(330);
         this.setTooltip("");
         this.setHelpUrl("");
     },

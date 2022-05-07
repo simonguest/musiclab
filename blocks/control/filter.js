@@ -5,7 +5,7 @@ export let filter = {
             .appendField("Set filter");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
-        this.setColour(230);
+        this.setColour(330);
         this.setTooltip("Filter is between 0 and 100");
         this.setHelpUrl("");
     },
