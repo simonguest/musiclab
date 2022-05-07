@@ -6,6 +6,7 @@
     <title>WebAudio Test</title>
     <meta name="description" content="WebAudio Test">
     <meta name="author" content="Simon Guest">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         html, body {
             height: 100%;
@@ -26,7 +27,7 @@
         }
         #blocklyArea {
             height: 99%;
-            background: #fc9;
+            background: #e9f5f3;
             text-align: center;
         }
     </style>
@@ -34,10 +35,6 @@
 </head>
 
 <body>
-
-<!--<hr>-->
-<!--<div id="workspace" style="height: 600px; width: 1000px;"></div>-->
-
 <table>
     <tr>
         <td>
@@ -52,7 +49,7 @@
         </td>
     </tr>
     <tr>
-        <td id="blocklyArea">
+        <td id="blocklyArea">Loading...
         </td>
     </tr>
 </table>
@@ -89,7 +86,7 @@
     let workspace = Blockly.inject('blocklyDiv', {
         toolbox: toolbox, move: {
             scrollbars: {
-                horizontal: true,
+                horizontal: false,
                 vertical: true
             },
             drag: true,
@@ -116,17 +113,6 @@
     window.addEventListener('resize', onresize, false);
     onresize();
     Blockly.svgResize(workspace);
-
-    // let workspace = Blockly.inject('workspace', {
-    //     toolbox: toolbox, move: {
-    //         scrollbars: {
-    //             horizontal: true,
-    //             vertical: true
-    //         },
-    //         drag: true,
-    //         wheel: true
-    //     }
-    // });
 
     workspace.addChangeListener((ev) => {
         if ((ev.type === Blockly.Events.BLOCK_MOVE) || (ev.type === Blockly.Events.BLOCK_CHANGE) || (ev.type === Blockly.Events.BLOCK_DELETE)) {
