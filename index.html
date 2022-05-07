@@ -112,7 +112,11 @@
         return src.buffer.duration; // used for play sample unti end block
     }
 
-    const playNote = (context, note, timeOffset, duration, volume) => {
+    const playNote = (context, note, duration, options) => {
+        options = typeof options !== 'undefined' ? options : {};
+        let offset = options.offset || 0;
+        let volume = options.volume || 100;
+
         let osc = context.createOscillator();
         osc.type = "sine";
         osc.frequency.value = note;
@@ -123,8 +127,8 @@
         nextNode.gain.value = convertToUnitInterval(volume);
         osc.connect(nextNode);
 
-        osc.start(context.currentTime + timeOffset);
-        osc.stop(context.currentTime + timeOffset + duration);
+        osc.start(context.currentTime + offset);
+        osc.stop(context.currentTime + offset + duration);
     }
 
     const playDebugClip = (context, samples, tempo) => {
