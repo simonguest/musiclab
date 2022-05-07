@@ -16,7 +16,9 @@
 <button id="resume">Resume</button>
 <button id="stop">Stop</button>
 <button id="debug">Debug</button>
-<button id="clear">Clear Session</button>
+<button id="clear">Clear Workspace</button>
+<button id="export">Export Workspace</button>
+<input type="file" id="import" />
 <hr>
 <div id="workspace" style="height: 600px; width: 1000px;"></div>
 
@@ -185,6 +187,36 @@
             console.log("clear session button pressed");
             sessionStorage.removeItem("workspace");
         }
+
+        document.getElementById("export").onclick = () => {
+            console.log("export workspace button pressed");
+            var file = new Blob([sessionStorage.getItem("workspace")], {type: "text/json"});
+            var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = "musiclab-workspace.json";
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        }
+
+        document.getElementById("import").onchange = (e) => {
+            console.log("importing workspace from file");
+            var file = e.target.files[0];
+            if (!file) {
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var json = e.target.result;
+                Blockly.serialization.workspaces.load(JSON.parse(json.toString()), workspace);
+                sessionStorage.setItem("workspace", json.toString());
+            };
+            reader.readAsText(file);
+        };
 
     }
 
