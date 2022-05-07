@@ -16,6 +16,6 @@ export let sleepBeats = {
 
     transpile: function (block) {
         var duration = Blockly.JavaScript.valueToCode(block, 'DURATION', Blockly.JavaScript.ORDER_NONE);
-        return `var bpm = typeof bpm !== 'undefined' ? bpm : 100; var beatDuration = 60 / bpm; var options = typeof options !== 'undefined' ? options : { }; options.offset = (options.offset ? options.offset : 0) + (${duration} * beatDuration);`;
+        return `var options = typeof options !== 'undefined' ? options : { }; options.bpm = options.bpm ? options.bpm : 100; var beatDuration = 60 / options.bpm; options.offset = (options.offset ? options.offset : 0) + (${duration} * beatDuration);`;
     }
 };
