@@ -6,22 +6,57 @@
     <title>WebAudio Test</title>
     <meta name="description" content="WebAudio Test">
     <meta name="author" content="Simon Guest">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            background-color: #fff;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+        h1 {
+            font-weight: normal;
+            font-size: 140%;
+        }
+        table {
+            height: 100%;
+            width: 100%;
+        }
+        #blocklyArea {
+            height: 99%;
+            background: #fc9;
+            text-align: center;
+        }
+    </style>
     <script src="./lib/blockly.min.js"></script>
-    <!-- link rel="stylesheet" href="css/styles.css?v=1.0"-->
 </head>
 
 <body>
-<button id="play">Play</button>
-<button id="pause">Pause</button>
-<button id="resume">Resume</button>
-<button id="stop">Stop</button>
-<button id="debug">Debug</button>
-<button id="clear">Clear Workspace</button>
-<button id="export">Export Workspace</button>
-<input type="file" id="import" />
-<hr>
-<div id="workspace" style="height: 600px; width: 1000px;"></div>
 
+<!--<hr>-->
+<!--<div id="workspace" style="height: 600px; width: 1000px;"></div>-->
+
+<table>
+    <tr>
+        <td>
+            <button id="play">Play</button>
+            <button id="pause">Pause</button>
+            <button id="resume">Resume</button>
+            <button id="stop">Stop</button>
+            <button id="debug">Debug</button>
+            <button id="clear">Clear Workspace</button>
+            <button id="export">Export Workspace</button>
+            <input type="file" id="import"/>
+        </td>
+    </tr>
+    <tr>
+        <td id="blocklyArea">
+        </td>
+    </tr>
+</table>
+<div id="blocklyDiv" style="position: absolute"></div>
 
 <script type="module">
     const createCustomBlock = (name, blockType) => {
@@ -49,7 +84,50 @@
     createCustomBlock("hihat", percussion.hihat);
     createCustomBlock("techno", looping.techno);
 
-    let workspace = Blockly.inject('workspace', {toolbox: toolbox});
+    var blocklyArea = document.getElementById('blocklyArea');
+    var blocklyDiv = document.getElementById('blocklyDiv');
+    let workspace = Blockly.inject('blocklyDiv', {
+        toolbox: toolbox, move: {
+            scrollbars: {
+                horizontal: true,
+                vertical: true
+            },
+            drag: true,
+            wheel: true
+        }
+    });
+    var onresize = function(e) {
+        // Compute the absolute coordinates and dimensions of blocklyArea.
+        var element = blocklyArea;
+        var x = 0;
+        var y = 0;
+        do {
+            x += element.offsetLeft;
+            y += element.offsetTop;
+            element = element.offsetParent;
+        } while (element);
+        // Position blocklyDiv over blocklyArea.
+        blocklyDiv.style.left = x + 'px';
+        blocklyDiv.style.top = y + 'px';
+        blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
+        blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+        Blockly.svgResize(workspace);
+    };
+    window.addEventListener('resize', onresize, false);
+    onresize();
+    Blockly.svgResize(workspace);
+
+    // let workspace = Blockly.inject('workspace', {
+    //     toolbox: toolbox, move: {
+    //         scrollbars: {
+    //             horizontal: true,
+    //             vertical: true
+    //         },
+    //         drag: true,
+    //         wheel: true
+    //     }
+    // });
+
     workspace.addChangeListener((ev) => {
         if ((ev.type === Blockly.Events.BLOCK_MOVE) || (ev.type === Blockly.Events.BLOCK_CHANGE) || (ev.type === Blockly.Events.BLOCK_DELETE)) {
             console.log("Writing workspace to session storage");
@@ -180,7 +258,7 @@
             console.log("debug button pressed");
             context = new window.AudioContext();
             playSample(context, samples, "snare", {});
-            playSample(context, samples, "snare", { offset: 0.5 });
+            playSample(context, samples, "snare", {offset: 0.5});
         }
 
         document.getElementById("clear").onclick = () => {
@@ -197,7 +275,7 @@
             a.download = "musiclab-workspace.json";
             document.body.appendChild(a);
             a.click();
-            setTimeout(function() {
+            setTimeout(function () {
                 document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
             }, 0);
@@ -210,7 +288,7 @@
                 return;
             }
             var reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 var json = e.target.result;
                 Blockly.serialization.workspaces.load(JSON.parse(json.toString()), workspace);
                 sessionStorage.setItem("workspace", json.toString());
