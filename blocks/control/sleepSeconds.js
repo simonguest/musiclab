@@ -16,6 +16,6 @@ export let sleepSeconds = {
 
     transpile: function (block) {
         var duration = Blockly.JavaScript.valueToCode(block, 'DURATION', Blockly.JavaScript.ORDER_NONE);
-        return `var options = typeof options !== 'undefined' ? options : { offset : 0}; options.offset += ${duration};`;
+        return `var options = typeof options !== 'undefined' ? options : {}; options.offset = options.offset ? options.offset : 0; options.offset += ${duration};`;
     }
 };

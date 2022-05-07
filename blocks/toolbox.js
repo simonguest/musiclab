@@ -109,6 +109,10 @@ export let toolbox = {
                 },
                 {
                     "kind":"block",
+                    "type":"playSampleUntilEnd"
+                },
+                {
+                    "kind":"block",
                     "type":"playNote",
                     "inputs": {
                         "DURATION": {

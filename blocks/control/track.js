@@ -15,7 +15,7 @@ export let track = {
 
     transpile: function (block) {
         let statements = Blockly.JavaScript.statementToCode(block, 'STATEMENTS');
-        let code = `var timeIndex = 0; ${statements}`;
+        let code = `var options = {}; ${statements}`;
         return code;
     }
 };

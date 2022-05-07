@@ -34,6 +34,7 @@
     createCustomBlock("track", control.track);
     createCustomBlock("playNote", control.playNote);
     createCustomBlock("playSample", control.playSample);
+    createCustomBlock("playSampleUntilEnd", control.playSampleUntilEnd);
     createCustomBlock("sleep", control.sleepSeconds);
     createCustomBlock("sleepBeats", control.sleepBeats);
     createCustomBlock("volume", control.volume);
@@ -108,7 +109,7 @@
 
         src.start(offset + context.currentTime);
 
-        return src.buffer.duration; // useful to cue up other samples
+        return src.buffer.duration; // used for play sample unti end block
     }
 
     const playNote = (context, note, timeOffset, duration, volume) => {
