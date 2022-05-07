@@ -107,6 +107,10 @@ export let toolbox = {
             "contents": [
                 {
                     "kind":"block",
+                    "type":"track"
+                },
+                {
+                    "kind":"block",
                     "type":"playSample"
                 },
                 {
@@ -126,10 +130,6 @@ export let toolbox = {
                             }
                         }
                     }
-                },
-                {
-                    "kind":"block",
-                    "type":"track"
                 },
                 {
                     "kind":"block",
