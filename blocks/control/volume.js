@@ -12,6 +12,6 @@ export let volume = {
 
     transpile: function (block) {
         var volume = Blockly.JavaScript.valueToCode(block, 'VOLUME', Blockly.JavaScript.ORDER_ATOMIC);
-        return `var volume = ${volume};`;
+        return `var options = typeof options !== 'undefined' ? options : {}; options.volume = ${volume};`;
     }
 };

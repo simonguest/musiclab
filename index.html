@@ -80,7 +80,12 @@
         return value / 100;
     }
 
-    const playSample = (context, samples, name, timeOffset, volume, filter) => {
+    const playSample = (context, samples, name, options) => {
+        options = typeof options !== 'undefined' ? options : {};
+        let offset = options.offset || 0;
+        let volume = options.volume || 100;
+        let filter = options.filter || 100;
+
         let src = context.createBufferSource();
         src.buffer = samples.get(name);
         console.log(src);
@@ -98,7 +103,9 @@
 
         src.connect(filterNode);
 
-        src.start(timeOffset + context.currentTime);
+        src.start(offset + context.currentTime);
+
+        return src.buffer.duration; // useful to cue up other samples
     }
 
     const playNote = (context, note, timeOffset, duration, volume) => {
@@ -161,9 +168,8 @@
         document.getElementById("debug").onclick = () => {
             console.log("debug button pressed");
             context = new window.AudioContext();
-            var volume = 1;
-            playSample(context, samples, "snare", 0, volume);
-            //playDebugClip(context, samples, 80);
+            playSample(context, samples, "snare", {});
+            playSample(context, samples, "snare", { offset: 0.5 });
         }
 
         document.getElementById("clear").onclick = () => {

@@ -12,6 +12,6 @@ export let filter = {
 
     transpile: function (block) {
         var filter = Blockly.JavaScript.valueToCode(block, 'FILTER', Blockly.JavaScript.ORDER_ATOMIC);
-        return `var filter = ${filter};`;
+        return `var options = typeof options !== 'undefined' ? options : {}; options.filter = ${filter};`;
     }
 };
