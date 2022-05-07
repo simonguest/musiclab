@@ -141,9 +141,37 @@ export let toolbox = {
                 },
                 {
                     "kind":"block",
+                    "type":"sleepBeats",
+                    "inputs": {
+                        "DURATION": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind":"block",
                     "type":"volume",
                     "inputs": {
                         "VOLUME": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 100
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind":"block",
+                    "type":"bpm",
+                    "inputs": {
+                        "BPM": {
                             "block": {
                                 "type": "math_number",
                                 "fields": {

@@ -1,4 +1,4 @@
-export let sleep = {
+export let sleepBeats = {
     init: function () {
         this.appendValueInput("DURATION")
             .setCheck("Number")
@@ -16,6 +16,6 @@ export let sleep = {
 
     transpile: function (block) {
         var duration = Blockly.JavaScript.valueToCode(block, 'DURATION', Blockly.JavaScript.ORDER_NONE);
-        return `var options = typeof options !== 'undefined' ? options : { offset : 0}; options.offset += ${duration};`;
+        return `var bpm = typeof bpm !== 'undefined' ? bpm : 100; var beatDuration = 60 / bpm; var options = typeof options !== 'undefined' ? options : { }; options.offset = (options.offset ? options.offset : 0) + (${duration} * beatDuration); console.log(options);`;
     }
 };
