@@ -151,7 +151,15 @@
         return value / 100;
     }
 
-    const playSample = (context, samples, name, options) => {
+    const highlightBlock = (id) => {
+        document.evaluate(`//*[@data-id='${id}']`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.classList.add("blocklySelected")
+    }
+
+    const removeHighlight = (id) => {
+        document.evaluate(`//*[@data-id='${id}']`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.classList.remove("blocklySelected")
+    }
+
+    const playSample = (context, samples, name, options, blockid) => {
         options = typeof options !== 'undefined' ? options : {};
         let offset = options.offset || 0;
         let volume = options.volume || 100;
@@ -160,6 +168,21 @@
         let src = context.createBufferSource();
         src.buffer = samples.get(name);
         console.log(src);
+
+        // null src is an empty source used to highlight the block
+        // (to compensate as there is no onStart event handler in WebAudio AudioBufferSourceNode )
+        let nullSrc = context.createBufferSource();
+        if (blockid) {
+            src.onended = () => {
+                removeHighlight(blockid);
+            }
+
+            nullSrc.connect(context.destination);
+            nullSrc.buffer = context.createBuffer(1, 1, 44000);
+            nullSrc.onended = () => {
+                highlightBlock(blockid);
+            }
+        }
 
         var gainNode = context.createGain();
         gainNode.gain.value = convertToUnitInterval(volume);
@@ -175,6 +198,7 @@
         src.connect(filterNode);
 
         src.start(offset + context.currentTime);
+        nullSrc.start(offset + context.currentTime);
 
         return src.buffer.duration; // used for play sample unti end block
     }

@@ -13,8 +13,9 @@ export let playSample = {
     },
 
     transpile: function (block) {
+        console.log(block);
         let sample = Blockly.JavaScript.valueToCode(block, 'SAMPLE', Blockly.JavaScript.ORDER_NONE);
-        let code = `var options = typeof options !== 'undefined' ? options : {}; playSample(context, samples, ${sample}, options);`;
+        let code = `var options = typeof options !== 'undefined' ? options : {}; playSample(context, samples, ${sample}, options, "${block.id}");`;
         return code;
     }
 };
