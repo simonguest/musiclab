@@ -224,8 +224,6 @@
             nullSrc.connect(context.destination);
             nullSrc.buffer = context.createBuffer(1, 1, 44000);
             nullSrc.onended = () => {
-                console.log(blockid);
-
                 highlightBlock(blockid);
             }
         }
