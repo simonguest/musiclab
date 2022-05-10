@@ -203,7 +203,7 @@
         return src.buffer.duration; // used for play sample unti end block
     }
 
-    const playNote = (context, note, duration, options) => {
+    const playNote = (context, note, duration, options, blockid) => {
         options = typeof options !== 'undefined' ? options : {};
         let offset = options.offset || 0;
         let volume = options.volume || 100;
@@ -213,12 +213,30 @@
         osc.frequency.value = note;
         console.log(osc);
 
+        // null src is an empty source used to highlight the block
+        // (to compensate as there is no onStart event handler in WebAudio AudioBufferSourceNode )
+        let nullSrc = context.createBufferSource();
+        if (blockid) {
+            osc.onended = () => {
+                removeHighlight(blockid);
+            }
+
+            nullSrc.connect(context.destination);
+            nullSrc.buffer = context.createBuffer(1, 1, 44000);
+            nullSrc.onended = () => {
+                console.log(blockid);
+
+                highlightBlock(blockid);
+            }
+        }
+
         var nextNode = context.createGain();
         nextNode.connect(context.destination);
         nextNode.gain.value = convertToUnitInterval(volume);
         osc.connect(nextNode);
 
         osc.start(context.currentTime + offset);
+        nullSrc.start(offset + context.currentTime);
         osc.stop(context.currentTime + offset + duration);
     }
 
