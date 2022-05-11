@@ -159,87 +159,72 @@
         document.evaluate(`//*[@data-id='${id}']`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.classList.remove("blocklySelected")
     }
 
-    const playSample = (context, samples, name, options, blockid) => {
-        options = typeof options !== 'undefined' ? options : {};
-        let offset = options.offset || 0;
+    const buildNodeTree = (context, sourceNode, duration, options, blockid) => {
         let volume = options.volume || 100;
         let filter = options.filter || 100;
+        let offset = options.offset || 0;
+
+        // highlight the active block
+        // null src is an empty source used to highlight the block
+        // (to compensate as there is no onStart event handler in WebAudio AudioBufferSourceNode )
+        let nullSource = context.createBufferSource();
+        if (blockid) {
+            sourceNode.onended = () => {
+                removeHighlight(blockid);
+            }
+
+            nullSource.connect(context.destination);
+            nullSource.buffer = context.createBuffer(1, 1, 44000);
+            nullSource.onended = () => {
+                highlightBlock(blockid);
+            }
+        }
+
+        // Build the tree backwards, starting with the gain node for volume
+        var gainNode = context.createGain();
+        gainNode.gain.value = convertToUnitInterval(volume);
+        gainNode.connect(context.destination);
+
+        // Add the filter node
+        var filterNode = context.createBiquadFilter();
+        filterNode.type = "lowpass";
+        if (sourceNode.buffer) {
+            filterNode.frequency.value = (sourceNode.buffer.sampleRate / 4) * convertToUnitInterval(filter);
+        }
+        console.log(filterNode);
+        filterNode.connect(gainNode);
+        sourceNode.connect(filterNode);
+
+        // start the source and null source
+        sourceNode.start(offset + context.currentTime);
+        nullSource.start(offset + context.currentTime);
+        if (duration){
+            sourceNode.stop(context.currentTime + offset + duration);
+        }
+
+    }
+
+    const playSample = (context, samples, name, options, blockid) => {
+        options = typeof options !== 'undefined' ? options : {};
 
         let src = context.createBufferSource();
         src.buffer = samples.get(name);
         console.log(src);
 
-        // null src is an empty source used to highlight the block
-        // (to compensate as there is no onStart event handler in WebAudio AudioBufferSourceNode )
-        let nullSrc = context.createBufferSource();
-        if (blockid) {
-            src.onended = () => {
-                removeHighlight(blockid);
-            }
+        buildNodeTree(context, src, null, options, blockid);
 
-            nullSrc.connect(context.destination);
-            nullSrc.buffer = context.createBuffer(1, 1, 44000);
-            nullSrc.onended = () => {
-                highlightBlock(blockid);
-            }
-        }
-
-        var gainNode = context.createGain();
-        gainNode.gain.value = convertToUnitInterval(volume);
-        gainNode.connect(context.destination);
-
-        var filterNode = context.createBiquadFilter();
-        filterNode.type = "lowpass";
-        var hz = (src.buffer.sampleRate / 4) * convertToUnitInterval(filter);
-        filterNode.frequency.value = hz;
-        console.log(filterNode);
-        filterNode.connect(gainNode);
-
-        src.connect(filterNode);
-
-        src.start(offset + context.currentTime);
-        nullSrc.start(offset + context.currentTime);
-
-        return src.buffer.duration; // used for play sample unti end block
+        return src.buffer.duration; // used for play sample until end block
     }
 
     const playNote = (context, note, duration, options, blockid) => {
         options = typeof options !== 'undefined' ? options : {};
-        let offset = options.offset || 0;
-        let volume = options.volume || 100;
 
         let osc = context.createOscillator();
         osc.type = "sine";
         osc.frequency.value = note;
         console.log(osc);
 
-        // null src is an empty source used to highlight the block
-        // (to compensate as there is no onStart event handler in WebAudio AudioBufferSourceNode )
-        let nullSrc = context.createBufferSource();
-        if (blockid) {
-            osc.onended = () => {
-                removeHighlight(blockid);
-            }
-
-            nullSrc.connect(context.destination);
-            nullSrc.buffer = context.createBuffer(1, 1, 44000);
-            nullSrc.onended = () => {
-                highlightBlock(blockid);
-            }
-        }
-
-        var nextNode = context.createGain();
-        nextNode.connect(context.destination);
-        nextNode.gain.value = convertToUnitInterval(volume);
-        osc.connect(nextNode);
-
-        osc.start(context.currentTime + offset);
-        nullSrc.start(offset + context.currentTime);
-        osc.stop(context.currentTime + offset + duration);
-    }
-
-    const playDebugClip = (context, samples, tempo) => {
-        playNote(context, 261.625565300598634, 0, 0.5);
+        buildNodeTree(context, osc, duration, options, blockid);
     }
 
     async function start() {
@@ -261,7 +246,6 @@
             console.log(code);
 
             context = new window.AudioContext();
-            var volume = 100;
             eval(code);
         }
 
