@@ -12,6 +12,6 @@ export let bpm = {
 
     transpile: function (block) {
         var bpm = Blockly.JavaScript.valueToCode(block, 'BPM', Blockly.JavaScript.ORDER_ATOMIC);
-        return `var options = typeof options !== 'undefined' ? options : {}; options.bpm = ${bpm};`;
+        return `options.bpm = ${bpm};`;
     }
 };

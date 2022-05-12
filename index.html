@@ -174,7 +174,7 @@
             }
 
             nullSource.connect(context.destination);
-            nullSource.buffer = context.createBuffer(1, 1, 44000);
+            nullSource.buffer = context.createBuffer(1, 1, 10000);
             nullSource.onended = () => {
                 highlightBlock(blockid);
             }
@@ -205,8 +205,6 @@
     }
 
     const playSample = (context, samples, name, options, blockid) => {
-        options = typeof options !== 'undefined' ? options : {};
-
         let src = context.createBufferSource();
         src.buffer = samples.get(name);
         console.log(src);
@@ -217,14 +215,22 @@
     }
 
     const playNote = (context, note, duration, options, blockid) => {
-        options = typeof options !== 'undefined' ? options : {};
-
         let osc = context.createOscillator();
         osc.type = "sine";
         osc.frequency.value = note;
         console.log(osc);
 
         buildNodeTree(context, osc, duration, options, blockid);
+    }
+
+    const sleep = (context, duration, options, blockid) => {
+        // Create a blank sleep source at 10Khz
+        let sleepSource = context.createBufferSource();
+        sleepSource.connect(context.destination);
+        sleepSource.buffer = context.createBuffer(1, duration * 10000, 10000);
+
+        buildNodeTree(context, sleepSource, duration, options, blockid);
+        options.offset += duration;
     }
 
     async function start() {
@@ -246,6 +252,7 @@
             console.log(code);
 
             context = new window.AudioContext();
+            var options = { bpm: 100, offset: 0};
             eval(code);
         }
 

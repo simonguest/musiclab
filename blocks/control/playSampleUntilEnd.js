@@ -16,7 +16,7 @@ export let playSampleUntilEnd = {
 
     transpile: function (block) {
         let sample = Blockly.JavaScript.valueToCode(block, 'SAMPLE', Blockly.JavaScript.ORDER_NONE);
-        let code = `var duration = playSample(context, samples, ${sample}, options, "${block.id}"); var options = typeof options !== 'undefined' ? options : {}; options.offset = (options.offset ? options.offset : 0) + duration;`;
+        let code = `var duration = playSample(context, samples, ${sample}, options, "${block.id}"); sleep(context, duration, options, null);`;
         return code;
     }
 };
