@@ -68,6 +68,7 @@
 
     createCustomBlock("track", control.track);
     createCustomBlock("playNote", control.playNote);
+    createCustomBlock("playNoteUntilEnd", control.playNoteUntilEnd);
     createCustomBlock("playSample", control.playSample);
     createCustomBlock("playSampleUntilEnd", control.playSampleUntilEnd);
     createCustomBlock("sleep", control.sleepSeconds);
@@ -280,7 +281,10 @@
 
         document.getElementById("clear").onclick = () => {
             console.log("clear session button pressed");
-            sessionStorage.removeItem("workspace");
+            if (confirm("Clearing the workspace will lose all unsaved work. Continue?")) {
+                sessionStorage.removeItem("workspace");
+                location.reload();
+            }
         }
 
         document.getElementById("export").onclick = () => {
