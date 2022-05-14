@@ -219,6 +219,78 @@ export let toolbox = {
         },
         {
           "kind":"category",
+          "name":"Synths",
+          "contents": [
+              {
+                "kind":"block",
+                "type":"setSynth"
+              },
+              {
+                  "kind":"block",
+                  "type":"piano"
+              },
+              {
+                  "kind":"block",
+                  "type":"violin"
+              },
+              {
+              "kind": "block",
+              "type": "customSynth",
+                  "inputs": {
+                      "ATTACKLEVEL": {
+                          "block": {
+                              "type": "math_number",
+                              "fields": {
+                                  "NUM": 1
+                              }
+                          }
+                      },
+                      "ATTACKDURATION": {
+                          "block": {
+                              "type": "math_number",
+                              "fields": {
+                                  "NUM": 0.01
+                              }
+                          }
+                      },
+                      "DECAYLEVEL": {
+                          "block": {
+                              "type": "math_number",
+                              "fields": {
+                                  "NUM": 0.35
+                              }
+                          }
+                      },
+                      "DECAYDURATION": {
+                          "block": {
+                              "type": "math_number",
+                              "fields": {
+                                  "NUM": 0.1
+                              }
+                          }
+                      },
+                      "SUSTAINDURATION": {
+                          "block": {
+                              "type": "math_number",
+                              "fields": {
+                                  "NUM": 0.1
+                              }
+                          }
+                      },
+                      "RELEASEDURATION": {
+                          "block": {
+                              "type": "math_number",
+                              "fields": {
+                                  "NUM": 0.3
+                              }
+                          }
+                      }
+                  }
+          }
+          ]
+        },
+        {
+          "kind":"category",
           "name":"Samples",
           "contents": [
               {

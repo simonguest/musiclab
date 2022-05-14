@@ -64,6 +64,7 @@
     import * as control from "./blocks/control/index.js";
     import * as percussion from "./blocks/percussion/index.js";
     import * as looping from "./blocks/looping/index.js";
+    import * as synths from "./blocks/synths/index.js";
     import {toolbox} from "./blocks/toolbox.js";
 
     createCustomBlock("track", control.track);
@@ -81,6 +82,11 @@
     createCustomBlock("kick", percussion.kick);
     createCustomBlock("hihat", percussion.hihat);
     createCustomBlock("techno", looping.techno);
+
+    createCustomBlock("setSynth", synths.setSynth);
+    createCustomBlock("piano", synths.piano);
+    createCustomBlock("violin", synths.violin);
+    createCustomBlock("customSynth", synths.customSynth);
 
     var blocklyArea = document.getElementById('blocklyArea');
     var blocklyDiv = document.getElementById('blocklyDiv');
@@ -160,15 +166,26 @@
         document.evaluate(`//*[@data-id='${id}']`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.classList.remove("blocklySelected")
     }
 
-    const buildGainNodeFromEnvelope = (context, options, envelope) => {
-        envelope = typeof envelope !== 'undefined' ? envelope : {};
+    const buildGainNodeFromEnvelope = (context, options) => {
         var volume = options.volume || 100;
-        var attackLevel = envelope.attackLevel || (volume / 100);
-        var attackDuration = envelope.attackDuration || 0.01;
-        var decayLevel = envelope.decayLevel || 0.35 * (volume / 100);
-        var decayDuration = envelope.decayDuration || 0.1;
-        var sustainDuration = envelope.sustainLevel || 0.1;
-        var releaseDuration = envelope.releaseDuration || 0.3;
+        const DEFAULT_SYNTH = {
+            wave: "sawtooth",
+            adsr: {
+                attackLevel: 0.8,
+                attackDuration: 0.01,
+                decayLevel: 0.35,
+                decayDuration: 0.1,
+                sustainDuration: 0.1,
+                releaseDuration: 0.3
+            }
+        }
+        var synth = options.synth || DEFAULT_SYNTH;
+        var attackLevel = synth.adsr.attackLevel * (volume / 100);
+        var attackDuration = synth.adsr.attackDuration;
+        var decayLevel = synth.adsr.decayLevel * (volume / 100);
+        var decayDuration = synth.adsr.decayDuration;
+        var sustainDuration = synth.adsr.sustainDuration;
+        var releaseDuration = synth.adsr.releaseDuration;
         var totalDuration = 0;
 
         var gainNode = context.createGain();
@@ -214,7 +231,7 @@
             gainNode.gain.value = convertToUnitInterval(volume)
         } else {
             // gainnode should follow the ADSR envelope defined in the synth
-            var output = buildGainNodeFromEnvelope(context, options, {});
+            var output = buildGainNodeFromEnvelope(context, options);
             gainNode = output.gainNode;
             if (output.duration > duration) duration = output.duration;
         }
@@ -252,6 +269,9 @@
     const playNote = (context, note, duration, options, blockid) => {
         let osc = context.createOscillator();
         osc.type = "sawtooth";
+        if (options.synth){
+            osc.type = options.synth.wave;
+        }
         osc.frequency.value = note;
         console.log(osc);
 
