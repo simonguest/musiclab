@@ -227,6 +227,14 @@ export let toolbox = {
               },
               {
                   "kind":"block",
+                  "type":"mystic"
+              },
+              {
+                  "kind":"block",
+                  "type":"pluck"
+              },
+              {
+                  "kind":"block",
                   "type":"piano"
               },
               {

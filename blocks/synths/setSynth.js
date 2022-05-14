@@ -1,9 +1,8 @@
 export let setSynth = {
     init: function () {
-        this.appendDummyInput()
-            .appendField("Set Synth");
         this.appendValueInput("SYNTH")
-            .setCheck(null);
+            .setCheck(null)
+            .appendField("Set Synth");
         this.setInputsInline(false);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
