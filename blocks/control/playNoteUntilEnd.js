@@ -1,9 +1,11 @@
+import { notes } from "../../notes.js";
+
 export let playNoteUntilEnd = {
     init: function () {
         this.appendValueInput("DURATION")
             .setCheck("Number")
             .appendField("Play Note")
-            .appendField(new Blockly.FieldDropdown([["C", "261.626"], ["C#/D♭", "277.183"], ["D", "293.665"], ["D#/E♭", "311.127"], ["E", "329.628"], ["F", "349.228"], ["F#/G♭", "369.994 "], ["G", "391.995"], ["G#/A♭", "415.305"], ["A", "440"], ["A#/B♭", "466.164"], ["B", "493.883"]]), "NOTE")
+            .appendField(new Blockly.FieldDropdown(notes), "NOTE")
             .appendField("for");
         this.appendDummyInput()
             .appendField("beats until end");
