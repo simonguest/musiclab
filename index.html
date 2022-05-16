@@ -44,6 +44,12 @@
             <button id="stop">Stop</button>
             <button id="debug">Debug</button>
             <button id="clear">Clear Workspace</button>
+            <select id="examples">
+                <option value="" selected="true">Example Workspaces...</option>
+                <option value="bliss.json">Bliss (Mike Harvey)</option>
+                <option value="dual.json">Dual Tracks</option>
+                <option value="filter.json">Low Pass Filter</option>
+            </select>
             <button id="export">Export Workspace</button>
             <input type="file" id="import"/>
         </td>
@@ -349,6 +355,17 @@
             if (confirm("Clearing the workspace will lose all unsaved work. Continue?")) {
                 sessionStorage.removeItem("workspace");
                 location.reload();
+            }
+        }
+        document.getElementById("examples").value = "";
+        document.getElementById("examples").onchange = async (e) => {
+            console.log("example workspace changed");
+            if (e.target.value) {
+                if (confirm("Loading this example workspace will lose all unsaved work. Continue?")) {
+                    const response = await fetch(`/examples/${e.target.value}`);
+                    const json = await response.json();
+                    Blockly.serialization.workspaces.load(json, workspace);
+                }
             }
         }
 
