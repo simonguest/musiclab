@@ -18,9 +18,9 @@ export let playNote = {
     },
 
     transpile: function (block) {
-        let note = block.getFieldValue('NOTE');
+        let freq = block.getFieldValue('NOTE');
         let duration = Blockly.JavaScript.valueToCode(block, 'DURATION', Blockly.JavaScript.ORDER_NONE);
-        let code = `var beatDuration = 60 / options.bpm; playNote(context, ${note}, ${duration} * beatDuration, options, "${block.id}");`;
+        let code = `var beatDuration = 60 / options.bpm; playNote(context, { freq: ${freq}}, ${duration} * beatDuration, options, "${block.id}");`;
         return code;
     }
 };

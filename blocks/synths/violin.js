@@ -10,6 +10,6 @@ export let violin = {
     },
 
     transpile: function (block) {
-        return ["{ wave: 'sawtooth', adsr: { attackLevel: 0.5, attackDuration: 0.5, decayLevel: 0.7, decayDuration: 0.1, sustainDuration: 0.1, releaseDuration: 1.0 } }", Blockly.JavaScript.ORDER_NONE];
+        return ["{ wave: 'sawtooth', adsr: { attackLevel: 0.5, attackDuration: 0.4, decayLevel: 0.4, decayDuration: 0.1, sustainDuration: 0.1, releaseDuration: 0.6 } }", Blockly.JavaScript.ORDER_NONE];
     }
 };

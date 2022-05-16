@@ -147,6 +147,50 @@ export let toolbox = {
                 },
                 {
                     "kind":"block",
+                    "type":"playPianoKey",
+                    "inputs": {
+                        "KEY": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 40
+                                }
+                            }
+                        },
+                        "DURATION": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind":"block",
+                    "type":"playPianoKeyUntilEnd",
+                    "inputs": {
+                        "KEY": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 40
+                                }
+                            }
+                        },
+                        "DURATION": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind":"block",
                     "type":"sleep",
                     "inputs": {
                         "DURATION": {

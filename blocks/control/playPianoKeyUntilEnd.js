@@ -1,11 +1,10 @@
-import { notes } from "../../notes.js";
-
-export let playNoteUntilEnd = {
+export let playPianoKeyUntilEnd = {
     init: function () {
+        this.appendValueInput("KEY")
+            .setCheck("Number")
+            .appendField("Play Piano Key");
         this.appendValueInput("DURATION")
             .setCheck("Number")
-            .appendField("Play Note")
-            .appendField(new Blockly.FieldDropdown(notes), "NOTE")
             .appendField("for");
         this.appendDummyInput()
             .appendField("beats until end");
@@ -18,9 +17,13 @@ export let playNoteUntilEnd = {
     },
 
     transpile: function (block) {
-        let freq = block.getFieldValue('NOTE');
+        let key = Blockly.JavaScript.valueToCode(block, 'KEY', Blockly.JavaScript.ORDER_NONE);
         let duration = Blockly.JavaScript.valueToCode(block, 'DURATION', Blockly.JavaScript.ORDER_NONE);
-        let code = `var beatDuration = 60 / options.bpm; playNote(context, { freq: ${freq}}, ${duration} * beatDuration, options, "${block.id}"); sleep(context, ${duration} * beatDuration, options, "${block.id}");`;
+
+        if (key < 1) key = 1;
+        if (key > 88) key = 88;
+
+        let code = `var beatDuration = 60 / options.bpm; playNote(context, { key: ${key}}, ${duration} * beatDuration, options, "${block.id}"); sleep(context, ${duration} * beatDuration, options, "${block.id}");`;
         return code;
     }
 };

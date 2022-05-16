@@ -66,11 +66,14 @@
     import * as percussion from "./blocks/percussion/index.js";
     import * as looping from "./blocks/looping/index.js";
     import * as synths from "./blocks/synths/index.js";
+    import { notes } from "./notes.js";
     import {toolbox} from "./blocks/toolbox.js";
 
     createCustomBlock("track", control.track);
     createCustomBlock("playNote", control.playNote);
     createCustomBlock("playNoteUntilEnd", control.playNoteUntilEnd);
+    createCustomBlock("playPianoKey", control.playPianoKey);
+    createCustomBlock("playPianoKeyUntilEnd", control.playPianoKeyUntilEnd);
     createCustomBlock("playSample", control.playSample);
     createCustomBlock("playSampleUntilEnd", control.playSampleUntilEnd);
     createCustomBlock("sleep", control.sleepSeconds);
@@ -275,7 +278,12 @@
         if (options.synth){
             osc.type = options.synth.wave;
         }
-        osc.frequency.value = note;
+        if (note.freq) {
+            osc.frequency.value = note.freq;
+        }
+        if (note.key) {
+            osc.frequency.value = notes[note.key - 1][1];
+        }
         console.log(osc);
 
         buildNodeTree(context, osc, duration, options, blockid);
