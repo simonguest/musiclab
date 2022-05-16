@@ -362,7 +362,7 @@
             console.log("example workspace changed");
             if (e.target.value) {
                 if (confirm("Loading this example workspace will lose all unsaved work. Continue?")) {
-                    const response = await fetch(`/examples/${e.target.value}`);
+                    const response = await fetch(`./examples/${e.target.value}`);
                     const json = await response.json();
                     Blockly.serialization.workspaces.load(json, workspace);
                 }
