@@ -8,7 +8,8 @@ import {playSampleUntilEnd} from "./playSampleUntilEnd.js";
 import {sleepSeconds} from "./sleepSeconds.js";
 import {sleepBeats} from "./sleepBeats.js";
 import {volume} from "./volume.js";
+import {pitch} from "./pitch.js";
 import {filter} from "./filter.js";
 import {bpm} from "./bpm.js";
 
-export {track, playNote, playNoteUntilEnd, playPianoKey, playPianoKeyUntilEnd, playSample, playSampleUntilEnd, sleepSeconds, sleepBeats, volume, filter, bpm};
+export {track, playNote, playNoteUntilEnd, playPianoKey, playPianoKeyUntilEnd, playSample, playSampleUntilEnd, sleepSeconds, sleepBeats, volume, pitch, filter, bpm};

@@ -233,6 +233,20 @@ export let toolbox = {
                 },
                 {
                     "kind":"block",
+                    "type":"pitch",
+                    "inputs": {
+                        "PITCH": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind":"block",
                     "type":"bpm",
                     "inputs": {
                         "BPM": {
@@ -343,7 +357,7 @@ export let toolbox = {
         },
         {
           "kind":"category",
-          "name":"Samples",
+          "name":"Sample Library",
           "contents": [
               {
                   "kind":"category",
@@ -359,6 +373,16 @@ export let toolbox = {
                       },{
                           "kind":"block",
                           "type":"hihat"
+                      }
+                  ]
+              },
+              {
+                  "kind":"category",
+                  "name":"Effects",
+                  "contents": [
+                      {
+                          "kind":"block",
+                          "type":"choir"
                       }
                   ]
               },

@@ -49,6 +49,7 @@
                 <option value="bliss.json">Bliss (Mike Harvey)</option>
                 <option value="dual.json">Dual Tracks</option>
                 <option value="filter.json">Low Pass Filter</option>
+                <option value="pitch.json">Single Voice Pitch</option>
             </select>
             <button id="export">Export Workspace</button>
             <input type="file" id="import"/>
@@ -71,6 +72,7 @@
     import * as control from "./blocks/control/index.js";
     import * as percussion from "./blocks/percussion/index.js";
     import * as looping from "./blocks/looping/index.js";
+    import * as effects from "./blocks/effects/index.js";
     import * as synths from "./blocks/synths/index.js";
     import { notes } from "./notes.js";
     import {toolbox} from "./blocks/toolbox.js";
@@ -85,6 +87,7 @@
     createCustomBlock("sleep", control.sleepSeconds);
     createCustomBlock("sleepBeats", control.sleepBeats);
     createCustomBlock("volume", control.volume);
+    createCustomBlock("pitch", control.pitch);
     createCustomBlock("filter", control.filter);
     createCustomBlock("bpm", control.bpm);
 
@@ -92,6 +95,8 @@
     createCustomBlock("kick", percussion.kick);
     createCustomBlock("hihat", percussion.hihat);
     createCustomBlock("techno", looping.techno);
+
+    createCustomBlock("choir", effects.choir);
 
     createCustomBlock("setSynth", synths.setSynth);
     createCustomBlock("mystic", synths.mystic);
@@ -271,6 +276,7 @@
     const playSample = (context, samples, name, options, blockid) => {
         let src = context.createBufferSource();
         src.buffer = samples.get(name);
+        src.playbackRate.value = options.pitch || 1;
         console.log(src);
 
         buildNodeTree(context, src, null, options, blockid);
@@ -313,7 +319,7 @@
         let context = new window.AudioContext();
         console.log(context);
 
-        let samples = await loadSamples(context, ["./samples/snare.wav", "./samples/hihat.wav", "./samples/kick.wav", "./samples/techno.wav", "./samples/techno2.wav", "./samples/techno3.wav", "./samples/techno4.wav", "./samples/techno5.wav"]);
+        let samples = await loadSamples(context, ["./samples/snare.wav", "./samples/hihat.wav", "./samples/kick.wav", "./samples/techno.wav", "./samples/techno2.wav", "./samples/techno3.wav", "./samples/techno4.wav", "./samples/techno5.wav", "./samples/choir1.wav"]);
         console.log(samples);
 
         document.getElementById("play").onclick = () => {
