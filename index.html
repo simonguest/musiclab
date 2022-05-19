@@ -12,19 +12,23 @@
             height: 100%;
             margin: 0;
         }
+
         body {
             background-color: #fff;
             font-family: sans-serif;
             overflow: hidden;
         }
+
         h1 {
             font-weight: normal;
             font-size: 140%;
         }
+
         table {
             height: 100%;
             width: 100%;
         }
+
         #blocklyArea {
             height: 99%;
             background: #ffffff;
@@ -74,7 +78,7 @@
     import * as looping from "./blocks/looping/index.js";
     import * as effects from "./blocks/effects/index.js";
     import * as synths from "./blocks/synths/index.js";
-    import { notes } from "./notes.js";
+    import {notes} from "./notes.js";
     import {toolbox} from "./blocks/toolbox.js";
 
     createCustomBlock("track", control.track);
@@ -108,16 +112,20 @@
     var blocklyArea = document.getElementById('blocklyArea');
     var blocklyDiv = document.getElementById('blocklyDiv');
     let workspace = Blockly.inject('blocklyDiv', {
-        toolbox: toolbox, move: {
+        toolbox: toolbox,
+        horizontalLayout: true,
+        toolboxPosition: "end",
+        move: {
             scrollbars: {
                 horizontal: false,
                 vertical: true
             },
             drag: true,
             wheel: true
-        }
+        },
+        trashcan: false
     });
-    var onresize = function(e) {
+    var onresize = function (e) {
         // Compute the absolute coordinates and dimensions of blocklyArea.
         var element = blocklyArea;
         var x = 0;
@@ -206,7 +214,7 @@
         var totalDuration = 0;
 
         var gainNode = context.createGain();
-        gainNode.gain.setValueAtTime(0,0 + context.currentTime + options.offset);
+        gainNode.gain.setValueAtTime(0, 0 + context.currentTime + options.offset);
         totalDuration += attackDuration;
         gainNode.gain.linearRampToValueAtTime(attackLevel, totalDuration + context.currentTime + options.offset);
         totalDuration += decayDuration;
@@ -216,7 +224,7 @@
         totalDuration += releaseDuration;
         gainNode.gain.linearRampToValueAtTime(0, totalDuration + context.currentTime + options.offset);
 
-        return { gainNode: gainNode, duration: totalDuration };
+        return {gainNode: gainNode, duration: totalDuration};
     }
 
     const buildNodeTree = (context, sourceNode, duration, options, blockid) => {
@@ -267,7 +275,7 @@
         // start the source and null source
         sourceNode.start(offset + context.currentTime);
         nullSource.start(offset + context.currentTime);
-        if (duration){
+        if (duration) {
             sourceNode.stop(context.currentTime + offset + duration);
         }
 
@@ -287,7 +295,7 @@
     const playNote = (context, note, duration, options, blockid) => {
         let osc = context.createOscillator();
         osc.type = "sawtooth";
-        if (options.synth){
+        if (options.synth) {
             osc.type = options.synth.wave;
         }
         if (note.freq) {
@@ -330,7 +338,7 @@
             console.log(code);
 
             context = new window.AudioContext();
-            var options = { bpm: 100, offset: 0};
+            var options = {bpm: 100, offset: 0};
             eval(code);
         }
 
