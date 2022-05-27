@@ -58,6 +58,10 @@ export let toolbox = {
               {
                   "kind": "block",
                   "type": "logic_compare"
+              },
+              {
+                  "kind":"block",
+                  "type":"controls_if"
               }
           ]
         },
