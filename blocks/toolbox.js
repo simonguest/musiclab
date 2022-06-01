@@ -406,6 +406,12 @@ export let toolbox = {
             "kind": "category",
             "name": "Variables",
             "custom": "VARIABLE"
+        },
+        {
+            "kind": "category",
+            "name": "Functions",
+            "custom": "PROCEDURE"
         }
+
     ]
 };
