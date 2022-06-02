@@ -1,0 +1,415 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Piano Component</title>
+    <meta name="description" content="Piano Keyboard Test">
+    <meta name="author" content="Simon Guest">
+    <style>
+
+        .piano {
+            width: 450px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .octaves {
+            display: flex;
+
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+
+
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+
+            /*
+            scroll-snap-points-x: repeat(300px);
+            scroll-snap-type: mandatory;
+            */
+        }
+
+        .octaves::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .octaves::-webkit-scrollbar-thumb {
+            background: black;
+            border-radius: 10px;
+        }
+
+        .octaves::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .octaves > div {
+            scroll-snap-align: start;
+            flex-shrink: 0;
+            width: 450px;
+            height: 160px;
+            margin-right: 0px;
+            border-radius: 10px;
+            background: #eee;
+            transform-origin: center center;
+            transform: scale(1);
+            transition: transform 0.5s;
+            position: relative;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .piano > a {
+            display: inline-flex;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: white;
+            text-decoration: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 0 0.5rem 0;
+            position: relative;
+        }
+        .piano > a:active {
+            top: 1px;
+        }
+        .piano > a:focus {
+            background: #000;
+        }
+
+        @supports (scroll-snap-type) {
+            .piano > a {
+                display: none;
+            }
+        }
+
+
+        ul.keyboard {
+            position: relative;
+            display: inline-block;
+            height: 160px;
+            padding: 0;
+            cursor: pointer;
+            list-style-type: none;
+        }
+
+        ul.keyboard li {
+            position: relative;
+            float: left;
+            border-style: solid;
+            border-color: #000;
+            border-width: 2px 1px 2px 1px;
+            border-radius: 0 0 4px 4px;
+            color: #ccc;
+            text-align: center;
+        }
+
+        .whiteKey {
+            width: 30px;
+            height: 150px;
+            background: #fff;
+        }
+
+        .whiteKey:hover {
+            background: #999;
+        }
+
+        .whiteKey > p {
+            margin-top: 120px;
+        }
+
+        .blackKey {
+            background: #000;
+            z-index: 10;
+            left: 10px;
+            width: 20px;
+            height: 100px;
+            margin: 0 0 0 -22px;
+        }
+
+        .blackKey:hover {
+            background: #444;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Piano Keyboard Component Test</h1>
+<div class="piano">
+    <a href="#octave-0-1">0-1</a>
+    <a href="#octave-2-3">2-3</a>
+    <a href="#octave-4-5">4-5</a>
+    <a href="#octave-6-7">6-7</a>
+    <div class="octaves">
+        <div id="octave-0-1">
+            <ul class="keyboard">
+                <li class="whiteKey">
+                    <p>C0</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>D</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>E</p>
+                </li>
+                <li class="whiteKey">
+                    <p>F</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>G</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>A</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>B</p>
+                </li>
+                <li class="whiteKey">
+                    <p>C1</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>D</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>E</p>
+                </li>
+                <li class="whiteKey">
+                    <p>F</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>G</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>A</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>B</p>
+                </li>
+            </ul>
+        </div>
+        <div id="octave-2-3">
+            <ul class="keyboard">
+                <li class="whiteKey">
+                    <p>C2</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>D</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>E</p>
+                </li>
+                <li class="whiteKey">
+                    <p>F</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>G</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>A</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>B</p>
+                </li>
+                <li class="whiteKey">
+                    <p>C3</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>D</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>E</p>
+                </li>
+                <li class="whiteKey">
+                    <p>F</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>G</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>A</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>B</p>
+                </li>
+            </ul>
+        </div>
+        <div id="octave-4-5">
+            <ul class="keyboard">
+                <li class="whiteKey">
+                    <p>C4</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>D</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>E</p>
+                </li>
+                <li class="whiteKey">
+                    <p>F</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>G</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>A</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>B</p>
+                </li>
+                <li class="whiteKey">
+                    <p>C5</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>D</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>E</p>
+                </li>
+                <li class="whiteKey">
+                    <p>F</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>G</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>A</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>B</p>
+                </li>
+            </ul>
+        </div>
+        <div id="octave-6-7">
+            <ul class="keyboard">
+                <li class="whiteKey">
+                    <p>C6</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>D</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>E</p>
+                </li>
+                <li class="whiteKey">
+                    <p>F</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>G</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>A</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>B</p>
+                </li>
+                <li class="whiteKey">
+                    <p>C7</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>D</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>E</p>
+                </li>
+                <li class="whiteKey">
+                    <p>F</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>G</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>A</p>
+                </li>
+                <li class="blackKey">
+                </li>
+                <li class="whiteKey">
+                    <p>B</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
