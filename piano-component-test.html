@@ -64,10 +64,11 @@
 
         .piano > a {
             display: inline-flex;
-            width: 3.5rem;
+            width: 5rem;
             height: 2rem;
-            background: black url("./mini-octave.png");
-            background-size: cover;
+            background: black url("mini-octave.png");
+            background-size: contain;
+            background-repeat: no-repeat;
             color:transparent;
             border: 1px black;
             border-bottom-style: solid;
@@ -78,8 +79,9 @@
             position: relative;
         }
         .piano > a.selected {
-            background:linear-gradient(0deg, rgba(255, 150, 0, 0.5), rgba(255, 0, 150, 0.5)), url("./mini-octave.png");
-            background-size: cover;
+            background:linear-gradient(0deg, rgba(255, 150, 0, 0.5), rgba(255, 0, 150, 0.5)), url("mini-octave.png");
+            background-size: contain;
+            background-repeat: no-repeat;
         }
 
 
@@ -106,7 +108,7 @@
             border-color: #000;
             border-width: 2px 1px 2px 1px;
             border-radius: 0 0 4px 4px;
-            color: #bbb;
+
             text-align: center;
         }
 
@@ -116,12 +118,18 @@
             background: #fff;
         }
 
-        .whiteKey:hover {
-            background: #999;
-        }
-
         .whiteKey > p {
             margin-top: 120px;
+            color: #bbb;
+            user-select: none;
+        }
+
+        .whiteKey:hover {
+            background: rgb(255,150,0);
+        }
+
+        .whiteKey:hover > p {
+            color: #000;
         }
 
         .blackKey {
@@ -134,7 +142,7 @@
         }
 
         .blackKey:hover {
-            background: #444;
+            background: rgb(255,150,0);
         }
     </style>
     <script>
@@ -166,7 +174,7 @@
 <body>
 <h1>Piano Keyboard Component Test</h1>
 <div class="piano">
-    <a href="#octave-0-1" onclick="scrollPiano(0);">0-1</a><a href="#octave-2-3" onclick="scrollPiano(450);">2-3</a><a href="#octave-4-5" class="selected" onclick="scrollPiano(900);">4-5</a><a href="#octave-6-7" onclick="scrollPiano(1350);">6-7</a>
+    <a href="#octave-0-1" onclick="scrollPiano(0);" ondragstart="return false;">0-1</a><a href="#octave-2-3" onclick="scrollPiano(450);" ondragstart="return false;">2-3</a><a href="#octave-4-5" class="selected" onclick="scrollPiano(900);" ondragstart="return false;">4-5</a><a href="#octave-6-7" onclick="scrollPiano(1350);" ondragstart="return false;">6-7</a>
     <div class="octaves"  onscroll="scrolled(this)">
         <div id="octave-0-1">
             <ul class="keyboard">
