@@ -64,22 +64,24 @@
 
         .piano > a {
             display: inline-flex;
-            width: 1.5rem;
-            height: 1.5rem;
-            background: white;
+            width: 3.5rem;
+            height: 2rem;
+            background: black url("./mini-octave.png");
+            background-size: cover;
+            color:transparent;
+            border: 1px black;
+            border-bottom-style: solid;
             text-decoration: none;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
             margin: 0 0 0.5rem 0;
             position: relative;
         }
-        .piano > a:active {
-            top: 1px;
+        .piano > a.selected {
+            background:linear-gradient(0deg, rgba(255, 150, 0, 0.5), rgba(255, 0, 150, 0.5)), url("./mini-octave.png");
+            background-size: cover;
         }
-        .piano > a:focus {
-            background: #000;
-        }
+
 
         @supports (scroll-snap-type) {
             .piano > a {
@@ -104,7 +106,7 @@
             border-color: #000;
             border-width: 2px 1px 2px 1px;
             border-radius: 0 0 4px 4px;
-            color: #ccc;
+            color: #bbb;
             text-align: center;
         }
 
@@ -135,16 +137,37 @@
             background: #444;
         }
     </style>
+    <script>
+        function highlightMiniMap(e) {
+            document.querySelectorAll(".piano a").forEach((child) => {
+                child.className = "";
+            });
+            e.className = e.className + " selected";
+        }
+
+        function scrolled(e) {
+            let minimap = document.querySelectorAll(".piano a");
+            if (e.scrollLeft <= 225) highlightMiniMap(minimap[0]);
+            if (e.scrollLeft > 225 && e.scrollLeft <= 675) highlightMiniMap(minimap[1]);
+            if (e.scrollLeft > 675 && e.scrollLeft <= 1125) highlightMiniMap(minimap[2]);
+            if (e.scrollLeft > 1125) highlightMiniMap(minimap[3]);
+        }
+
+        function scrollPiano(x) {
+            document.querySelector(".octaves").scrollLeft = x;
+        }
+
+        window.onload = () => {
+            scrollPiano(900);
+        }
+    </script>
 </head>
 
 <body>
 <h1>Piano Keyboard Component Test</h1>
 <div class="piano">
-    <a href="#octave-0-1">0-1</a>
-    <a href="#octave-2-3">2-3</a>
-    <a href="#octave-4-5">4-5</a>
-    <a href="#octave-6-7">6-7</a>
-    <div class="octaves">
+    <a href="#octave-0-1" onclick="scrollPiano(0);">0-1</a><a href="#octave-2-3" onclick="scrollPiano(450);">2-3</a><a href="#octave-4-5" class="selected" onclick="scrollPiano(900);">4-5</a><a href="#octave-6-7" onclick="scrollPiano(1350);">6-7</a>
+    <div class="octaves"  onscroll="scrolled(this)">
         <div id="octave-0-1">
             <ul class="keyboard">
                 <li class="whiteKey">
