@@ -34,6 +34,13 @@
             background: #ffffff;
             text-align: center;
         }
+
+        #notePicker {
+            background-image: url(notes.png);
+            border: 1px solid #ccc;
+            height: 109px;
+            width: 46px;
+        }
     </style>
     <script src="./lib/blockly.min.js"></script>
 </head>
@@ -79,7 +86,10 @@
     import * as effects from "./blocks/effects/index.js";
     import * as synths from "./blocks/synths/index.js";
     import {notes} from "./notes.js";
+    import {note} from "./blocks/note.js";
     import {toolbox} from "./blocks/toolbox.js";
+
+    createCustomBlock("note", note);
 
     createCustomBlock("track", control.track);
     createCustomBlock("playNote", control.playNote);
