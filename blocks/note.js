@@ -22,7 +22,7 @@ CustomFields.FieldNote.fromJson = function(options) {
     return new CustomFields.FieldNote(options['pitch']);
 };
 
-CustomFields.FieldNote.NOTES = 'C3 D3 E3 F3 G3 A3 B3 C4 D4 E4 F4 G4 A4'.split(/ /);
+CustomFields.FieldNote.NOTES = 'C0 C#0 D0 D#0'.split(/ /);
 
 /**
  * Show the inline free-text editor on top of the text and the note picker.
@@ -50,12 +50,13 @@ CustomFields.FieldNote.prototype.showEditor_ = function() {
     // mousemove even if it's not in the middle of a drag.  In future we may
     // change this behaviour.  For now, using bindEvent_ instead of
     // bindEventWithChecks_ allows it to work without a mousedown/touchstart.
-    this.clickWrapper_ =
-        Blockly.browserEvents.bind(this.imageElement_, 'click', this,
-            this.hide_);
-    this.moveWrapper_ =
-        Blockly.browserEvents.bind(this.imageElement_, 'mousemove', this,
-            this.onMouseMove);
+
+    // this.clickWrapper_ =
+    //     Blockly.browserEvents.bind(this.imageElement_, 'click', this,
+    //         this.hide_);
+    // this.moveWrapper_ =
+    //     Blockly.browserEvents.bind(this.imageElement_, 'mousemove', this,
+    //         this.onMouseMove);
 
     this.updateGraph_();
 };
@@ -66,15 +67,62 @@ CustomFields.FieldNote.prototype.showEditor_ = function() {
  * @private
  */
 CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
-    this.imageElement_ = document.createElement('div');
-    this.imageElement_.id = 'notePicker';
-    fetch('note_dropdown.html')
-        .then( res => res.text())
-        .then( text => this.imageElement_.innerHTML = text);
+    // fetch('note_dropdown.html')
+    //     .then( res => res.text())
+    //     .then( text => this.imageElement_.innerHTML = text);
 
-    console.log(this.imageElement_);
+    let keySelectedListener = (el) => {
+        let value = "";
+        if (el.target.id === "") {
+            // clicked on a label; return the parent
+            value = el.target.parentNode.id;
+        } else {
+            value = el.target.id;
+        }
+        console.log(value);
+        this.setEditorValue_(CustomFields.FieldNote.NOTES.indexOf(value));
+    }
 
-    return this.imageElement_;
+    let createKey = (isWhite, id) => {
+        let key = document.createElement('li');
+        key.id = id;
+        if (isWhite) {
+            key.className = 'whiteKey';
+            let label = document.createElement('p');
+            label.innerText = id;
+            key.appendChild(label);
+        } else {
+            key.className = 'blackKey';
+        }
+        Blockly.browserEvents.bind(key, 'click', this, keySelectedListener);
+        return key;
+    }
+
+    let createOctave = (name) => {
+        let octave = document.createElement('div')
+        octave.setAttribute('id', name);
+        let keyboard = document.createElement('ul');
+        keyboard.className = 'keyboard';
+        keyboard.appendChild(createKey(true, 'C0'));
+        keyboard.appendChild(createKey(false, 'C#0'));
+        keyboard.appendChild(createKey(true, 'D0'));
+        keyboard.appendChild(createKey(false, 'D#0'));
+        octave.appendChild(keyboard);
+        return octave;
+    }
+
+    let piano = document.createElement('div');
+    piano.className = 'piano';
+    let octaves = document.createElement('div');
+    octaves.className = 'octaves';
+    octaves.appendChild(createOctave('octave-0-1'));
+
+    piano.appendChild(octaves);
+
+
+    console.log(piano);
+
+    return piano;
 };
 
 /**
@@ -106,13 +154,13 @@ CustomFields.FieldNote.prototype.hide_ = function() {
  * Set the note to match the mouse's position.
  * @param {!Event} e Mouse move event.
  */
-CustomFields.FieldNote.prototype.onMouseMove = function(e) {
-    var bBox = this.imageElement_.getBoundingClientRect();
-    var dy = e.clientY - bBox.top;
-    var note = Blockly.utils.math.clamp(Math.round(13.5 - dy / 7.5), 0, 12);
-    this.imageElement_.style.backgroundPosition = (-note * 37) + 'px 0';
-    this.setEditorValue_(note);
-};
+// CustomFields.FieldNote.prototype.onMouseMove = function(e) {
+//     var bBox = this.imageElement_.getBoundingClientRect();
+//     var dy = e.clientY - bBox.top;
+//     var note = Blockly.utils.math.clamp(Math.round(13.5 - dy / 7.5), 0, 12);
+//     this.imageElement_.style.backgroundPosition = (-note * 37) + 'px 0';
+//     this.setEditorValue_(note);
+// };
 
 /**
  * Convert the machine-readable value (0-12) to human-readable text (C3-A4).
@@ -181,12 +229,16 @@ CustomFields.FieldNote.prototype.render_ = function() {
  * @private
  */
 CustomFields.FieldNote.prototype.updateGraph_ = function() {
-    if (!this.imageElement_) {
-        return;
-    }
-    var i = this.getValue();
-    this.imageElement_.style.backgroundPosition = (-i * 37) + 'px 0';
+    // if (!this.imageElement_) {
+    //     return;
+    // }
+    // var i = this.getValue();
+    // this.imageElement_.style.backgroundPosition = (-i * 37) + 'px 0';
 };
+
+let scrolled = () => {
+    console.log("caught scrolled event");
+}
 
 /**
  * Ensure that only a valid value may be entered.
