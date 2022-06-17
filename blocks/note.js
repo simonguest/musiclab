@@ -22,7 +22,7 @@ CustomFields.FieldNote.fromJson = function(options) {
     return new CustomFields.FieldNote(options['pitch']);
 };
 
-CustomFields.FieldNote.NOTES = 'C0 C#0 D0 D#0'.split(/ /);
+CustomFields.FieldNote.NOTES = 'C0 C#0 D0 D#0 E0 F0 F#0 G0 G#0 A0 A#0 B0 C1 C#1 D1 D#1 E1 F1 F#1 G1 G#1 A1 A#1 B1'.split(/ /);
 
 /**
  * Show the inline free-text editor on top of the text and the note picker.
@@ -67,10 +67,6 @@ CustomFields.FieldNote.prototype.showEditor_ = function() {
  * @private
  */
 CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
-    // fetch('note_dropdown.html')
-    //     .then( res => res.text())
-    //     .then( text => this.imageElement_.innerHTML = text);
-
     let keySelectedListener = (el) => {
         let value = "";
         if (el.target.id === "") {
@@ -98,15 +94,35 @@ CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
         return key;
     }
 
-    let createOctave = (name) => {
+    let createDualOctave = (name, startingOctave) => {
         let octave = document.createElement('div')
         octave.setAttribute('id', name);
         let keyboard = document.createElement('ul');
         keyboard.className = 'keyboard';
-        keyboard.appendChild(createKey(true, 'C0'));
-        keyboard.appendChild(createKey(false, 'C#0'));
-        keyboard.appendChild(createKey(true, 'D0'));
-        keyboard.appendChild(createKey(false, 'D#0'));
+        keyboard.appendChild(createKey(true, `C${startingOctave}`));
+        keyboard.appendChild(createKey(false, `C#${startingOctave}`));
+        keyboard.appendChild(createKey(true, `D${startingOctave}`));
+        keyboard.appendChild(createKey(false, `D#${startingOctave}`));
+        keyboard.appendChild(createKey(true, `E${startingOctave}`));
+        keyboard.appendChild(createKey(true, `F${startingOctave}`));
+        keyboard.appendChild(createKey(false, `F#${startingOctave}`));
+        keyboard.appendChild(createKey(true, `G${startingOctave}`));
+        keyboard.appendChild(createKey(false, `G#${startingOctave}`));
+        keyboard.appendChild(createKey(true, `A${startingOctave}`));
+        keyboard.appendChild(createKey(false, `A#${startingOctave}`));
+        keyboard.appendChild(createKey(true, `B${startingOctave}`));
+        keyboard.appendChild(createKey(true, `C${startingOctave +1}`));
+        keyboard.appendChild(createKey(false, `C#${startingOctave +1}`));
+        keyboard.appendChild(createKey(true, `D${startingOctave +1}`));
+        keyboard.appendChild(createKey(false, `D#${startingOctave +1}`));
+        keyboard.appendChild(createKey(true, `E${startingOctave +1}`));
+        keyboard.appendChild(createKey(true, `F${startingOctave +1}`));
+        keyboard.appendChild(createKey(false, `F#${startingOctave +1}`));
+        keyboard.appendChild(createKey(true, `G${startingOctave +1}`));
+        keyboard.appendChild(createKey(false, `G#${startingOctave +1}`));
+        keyboard.appendChild(createKey(true, `A${startingOctave +1}`));
+        keyboard.appendChild(createKey(false, `A#${startingOctave +1}`));
+        keyboard.appendChild(createKey(true, `B${startingOctave +1}`));
         octave.appendChild(keyboard);
         return octave;
     }
@@ -115,12 +131,10 @@ CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
     piano.className = 'piano';
     let octaves = document.createElement('div');
     octaves.className = 'octaves';
-    octaves.appendChild(createOctave('octave-0-1'));
+    octaves.appendChild(createDualOctave('octave-0-1', 0));
 
     piano.appendChild(octaves);
-
-
-    console.log(piano);
+    
 
     return piano;
 };
