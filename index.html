@@ -152,10 +152,18 @@
         }
 
         .whiteKey:hover {
-            background: rgb(255,150,0);
+            background: #ffd8a9;
         }
 
         .whiteKey:hover > p {
+            color: #000;
+        }
+
+        .whiteKey.selected {
+            background: #ff9616;
+        }
+
+        .whiteKey.selected > p {
             color: #000;
         }
 
@@ -169,7 +177,11 @@
         }
 
         .blackKey:hover {
-            background: rgb(255,150,0);
+            background: #b36200;
+        }
+
+        .blackKey.selected {
+            background: #ff9616;
         }
     </style>
     <script src="./lib/blockly.min.js"></script>

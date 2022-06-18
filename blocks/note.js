@@ -75,17 +75,16 @@ CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
         } else {
             value = el.target.id;
         }
-        console.log(value);
         this.setEditorValue_(CustomFields.FieldNote.NOTES.indexOf(value));
     }
 
-    let createKey = (isWhite, id) => {
+    let createKey = (isWhite, note, octave) => {
         let key = document.createElement('li');
-        key.id = id;
+        key.id = `${note}${octave}`;
         if (isWhite) {
             key.className = 'whiteKey';
             let label = document.createElement('p');
-            label.innerText = id;
+            label.innerText = note !== 'C' ? `${note}` : `${note}${octave}`;
             key.appendChild(label);
         } else {
             key.className = 'blackKey';
@@ -99,30 +98,33 @@ CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
         octave.setAttribute('id', name);
         let keyboard = document.createElement('ul');
         keyboard.className = 'keyboard';
-        keyboard.appendChild(createKey(true, `C${startingOctave}`));
-        keyboard.appendChild(createKey(false, `C#${startingOctave}`));
-        keyboard.appendChild(createKey(true, `D${startingOctave}`));
-        keyboard.appendChild(createKey(false, `D#${startingOctave}`));
-        keyboard.appendChild(createKey(true, `E${startingOctave}`));
-        keyboard.appendChild(createKey(true, `F${startingOctave}`));
-        keyboard.appendChild(createKey(false, `F#${startingOctave}`));
-        keyboard.appendChild(createKey(true, `G${startingOctave}`));
-        keyboard.appendChild(createKey(false, `G#${startingOctave}`));
-        keyboard.appendChild(createKey(true, `A${startingOctave}`));
-        keyboard.appendChild(createKey(false, `A#${startingOctave}`));
-        keyboard.appendChild(createKey(true, `B${startingOctave}`));
-        keyboard.appendChild(createKey(true, `C${startingOctave +1}`));
-        keyboard.appendChild(createKey(false, `C#${startingOctave +1}`));
-        keyboard.appendChild(createKey(true, `D${startingOctave +1}`));
-        keyboard.appendChild(createKey(false, `D#${startingOctave +1}`));
-        keyboard.appendChild(createKey(true, `E${startingOctave +1}`));
-        keyboard.appendChild(createKey(true, `F${startingOctave +1}`));
-        keyboard.appendChild(createKey(false, `F#${startingOctave +1}`));
-        keyboard.appendChild(createKey(true, `G${startingOctave +1}`));
-        keyboard.appendChild(createKey(false, `G#${startingOctave +1}`));
-        keyboard.appendChild(createKey(true, `A${startingOctave +1}`));
-        keyboard.appendChild(createKey(false, `A#${startingOctave +1}`));
-        keyboard.appendChild(createKey(true, `B${startingOctave +1}`));
+        keyboard.appendChild(createKey(true, 'C', startingOctave));
+        keyboard.appendChild(createKey(false, 'C#', startingOctave));
+        keyboard.appendChild(createKey(true, 'D', startingOctave));
+        keyboard.appendChild(createKey(false, 'D#', startingOctave));
+        keyboard.appendChild(createKey(true, 'E', startingOctave));
+        keyboard.appendChild(createKey(true, 'F', startingOctave));
+        keyboard.appendChild(createKey(false, 'F#', startingOctave));
+        keyboard.appendChild(createKey(true, 'G', startingOctave));
+        keyboard.appendChild(createKey(false, 'G#', startingOctave));
+        keyboard.appendChild(createKey(true, 'A', startingOctave));
+        keyboard.appendChild(createKey(false, 'A#', startingOctave));
+        keyboard.appendChild(createKey(true, 'B', startingOctave));
+
+        keyboard.appendChild(createKey(true, 'C', startingOctave + 1));
+        keyboard.appendChild(createKey(false, 'C#', startingOctave + 1));
+        keyboard.appendChild(createKey(true, 'D', startingOctave + 1));
+        keyboard.appendChild(createKey(false, 'D#', startingOctave + 1));
+        keyboard.appendChild(createKey(true, 'E', startingOctave + 1));
+        keyboard.appendChild(createKey(true, 'F', startingOctave + 1));
+        keyboard.appendChild(createKey(false, 'F#', startingOctave + 1));
+        keyboard.appendChild(createKey(true, 'G', startingOctave + 1));
+        keyboard.appendChild(createKey(false, 'G#', startingOctave + 1));
+        keyboard.appendChild(createKey(true, 'A', startingOctave + 1));
+        keyboard.appendChild(createKey(false, 'A#', startingOctave + 1));
+        keyboard.appendChild(createKey(true, 'B', startingOctave + 1));
+
+
         octave.appendChild(keyboard);
         return octave;
     }
@@ -134,9 +136,9 @@ CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
     octaves.appendChild(createDualOctave('octave-0-1', 0));
 
     piano.appendChild(octaves);
-    
 
-    return piano;
+    this.imageElement_ = piano;
+    return this.imageElement_;
 };
 
 /**
@@ -144,14 +146,14 @@ CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
  * @private
  */
 CustomFields.FieldNote.prototype.dropdownDispose_ = function() {
-    if (this.clickWrapper_) {
-        Blockly.browserEvents.unbind(this.clickWrapper_);
-        this.clickWrapper_ = null;
-    }
-    if (this.moveWrapper_) {
-        Blockly.browserEvents.unbind(this.moveWrapper_);
-        this.moveWrapper_ = null;
-    }
+    // if (this.clickWrapper_) {
+    //     Blockly.browserEvents.unbind(this.clickWrapper_);
+    //     this.clickWrapper_ = null;
+    // }
+    // if (this.moveWrapper_) {
+    //     Blockly.browserEvents.unbind(this.moveWrapper_);
+    //     this.moveWrapper_ = null;
+    // }
     this.imageElement_ = null;
 };
 
@@ -243,16 +245,19 @@ CustomFields.FieldNote.prototype.render_ = function() {
  * @private
  */
 CustomFields.FieldNote.prototype.updateGraph_ = function() {
-    // if (!this.imageElement_) {
-    //     return;
-    // }
-    // var i = this.getValue();
-    // this.imageElement_.style.backgroundPosition = (-i * 37) + 'px 0';
-};
+    if (!this.imageElement_) {
+        return;
+    }
+    // Clear all current selections
+    let whiteKeys = this.imageElement_.querySelectorAll(`[class*="whiteKey"]`);
+    whiteKeys.forEach(key => key.classList.remove("selected"));
+    let blackKeys = this.imageElement_.querySelectorAll(`[class*="blackKey"]`);
+    blackKeys.forEach(key => key.classList.remove("selected"));
 
-let scrolled = () => {
-    console.log("caught scrolled event");
-}
+    // highlight the selected key
+    let id = CustomFields.FieldNote.NOTES[this.getValue()];
+    this.imageElement_.querySelector(`[id="${id}"]`).classList.add("selected")
+};
 
 /**
  * Ensure that only a valid value may be entered.
