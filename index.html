@@ -222,16 +222,15 @@
         Blockly.JavaScript[name] = blockType["transpile"];
     }
 
+    import {notes} from "./notes.js";
+
     import * as control from "./blocks/control/index.js";
     import * as percussion from "./blocks/percussion/index.js";
     import * as looping from "./blocks/looping/index.js";
     import * as effects from "./blocks/effects/index.js";
     import * as synths from "./blocks/synths/index.js";
-    import {notes} from "./notes.js";
-    import {note} from "./blocks/note.js";
-    import {toolbox} from "./blocks/toolbox.js";
 
-    createCustomBlock("note", note);
+    import {toolbox} from "./blocks/toolbox.js";
 
     createCustomBlock("track", control.track);
     createCustomBlock("playNote", control.playNote);
@@ -420,7 +419,6 @@
         if (sourceNode.buffer) {
             filterNode.frequency.value = (sourceNode.buffer.sampleRate / 4) * convertToUnitInterval(filter);
         }
-        console.log(filterNode);
         filterNode.connect(gainNode);
         sourceNode.connect(filterNode);
 
@@ -437,7 +435,6 @@
         let src = context.createBufferSource();
         src.buffer = samples.get(name);
         src.playbackRate.value = options.pitch || 1;
-        console.log(src);
 
         buildNodeTree(context, src, null, options, blockid);
 
@@ -454,9 +451,8 @@
             osc.frequency.value = note.freq;
         }
         if (note.key) {
-            osc.frequency.value = notes[note.key - 1][1];
+            osc.frequency.value = notes[note.key + 8][1]; //offset for an 88 key piano
         }
-        console.log(osc);
 
         buildNodeTree(context, osc, duration, options, blockid);
     }

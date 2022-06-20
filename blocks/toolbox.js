@@ -411,16 +411,6 @@ export let toolbox = {
             "kind": "category",
             "name": "Functions",
             "custom": "PROCEDURE"
-        },
-        {
-            "kind": "category",
-            "name": "Debug",
-            "contents": [
-                {
-                    "kind":"block",
-                    "type":"note"
-                }
-            ]
         }
 
     ]
