@@ -34,6 +34,155 @@
             background: #ffffff;
             text-align: center;
         }
+
+        .piano {
+            width: 450px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .octaves {
+            display: flex;
+
+            /*overflow-x: auto;*/
+            overflow: hidden;
+            scroll-snap-type: x mandatory;
+
+
+            scroll-behavior: auto;
+            -webkit-overflow-scrolling: touch;
+
+            /*
+            scroll-snap-points-x: repeat(300px);
+            scroll-snap-type: mandatory;
+            */
+        }
+
+        .octaves::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .octaves::-webkit-scrollbar-thumb {
+            background: black;
+            border-radius: 10px;
+        }
+
+        .octaves::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .octaves > div {
+            scroll-snap-align: start;
+            flex-shrink: 0;
+            width: 450px;
+            height: 160px;
+            margin-right: 0px;
+            background: #eee;
+            transform-origin: center center;
+            transform: scale(1);
+            transition: transform 0.5s;
+            position: relative;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .piano > a {
+            display: inline-flex;
+            width: 5rem;
+            height: 2rem;
+            background: black url("mini-octave.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+            color:transparent;
+            border: 1px black;
+            border-bottom-style: solid;
+            text-decoration: none;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0 0.5rem 0;
+            position: relative;
+        }
+        .piano > a.selected {
+            background:linear-gradient(0deg, rgba(255, 150, 0, 0.5), rgba(255, 0, 150, 0.5)), url("mini-octave.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+
+        @supports (scroll-snap-type) {
+            .piano > a {
+                display: none;
+            }
+        }
+
+
+        ul.keyboard {
+            position: relative;
+            display: inline-block;
+            height: 160px;
+            padding: 0;
+            cursor: pointer;
+            list-style-type: none;
+        }
+
+        ul.keyboard li {
+            position: relative;
+            float: left;
+            border-style: solid;
+            border-color: #000;
+            border-width: 2px 1px 2px 1px;
+            border-radius: 0 0 4px 4px;
+
+            text-align: center;
+        }
+
+        .whiteKey {
+            width: 30px;
+            height: 150px;
+            background: #fff;
+        }
+
+        .whiteKey > p {
+            margin-top: 120px;
+            color: #bbb;
+            user-select: none;
+        }
+
+        .whiteKey:hover {
+            background: #ffd8a9;
+        }
+
+        .whiteKey:hover > p {
+            color: #000;
+        }
+
+        .whiteKey.selected {
+            background: #ff9616;
+        }
+
+        .whiteKey.selected > p {
+            color: #000;
+        }
+
+        .blackKey {
+            background: #000;
+            z-index: 10;
+            left: 10px;
+            width: 20px;
+            height: 100px;
+            margin: 0 0 0 -22px;
+        }
+
+        .blackKey:hover {
+            background: #b36200;
+        }
+
+        .blackKey.selected {
+            background: #ff9616;
+        }
     </style>
     <script src="./lib/blockly.min.js"></script>
 </head>
@@ -73,12 +222,14 @@
         Blockly.JavaScript[name] = blockType["transpile"];
     }
 
+    import {notes} from "./notes.js";
+
     import * as control from "./blocks/control/index.js";
     import * as percussion from "./blocks/percussion/index.js";
     import * as looping from "./blocks/looping/index.js";
     import * as effects from "./blocks/effects/index.js";
     import * as synths from "./blocks/synths/index.js";
-    import {notes} from "./notes.js";
+
     import {toolbox} from "./blocks/toolbox.js";
 
     createCustomBlock("track", control.track);
@@ -268,7 +419,6 @@
         if (sourceNode.buffer) {
             filterNode.frequency.value = (sourceNode.buffer.sampleRate / 4) * convertToUnitInterval(filter);
         }
-        console.log(filterNode);
         filterNode.connect(gainNode);
         sourceNode.connect(filterNode);
 
@@ -285,7 +435,6 @@
         let src = context.createBufferSource();
         src.buffer = samples.get(name);
         src.playbackRate.value = options.pitch || 1;
-        console.log(src);
 
         buildNodeTree(context, src, null, options, blockid);
 
@@ -302,9 +451,8 @@
             osc.frequency.value = note.freq;
         }
         if (note.key) {
-            osc.frequency.value = notes[note.key - 1][1];
+            osc.frequency.value = notes[note.key + 8][1]; //offset for an 88 key piano
         }
-        console.log(osc);
 
         buildNodeTree(context, osc, duration, options, blockid);
     }
