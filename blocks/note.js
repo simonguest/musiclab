@@ -21,8 +21,13 @@ Blockly.utils.object.inherits(CustomFields.FieldNote, Blockly.FieldTextInput);
 CustomFields.FieldNote.fromJson = function(options) {
     return new CustomFields.FieldNote(options['pitch']);
 };
+let noteString = "";
+for (let o=0; o<=7; o++){
+    noteString += `C${o} C#${o} D${o} D#${o} E${o} F${o} F#${o} G${o} G#${o} A${o} A#${o} B${o} `;
+}
+CustomFields.FieldNote.NOTES = noteString.split(/ /);
 
-CustomFields.FieldNote.NOTES = 'C0 C#0 D0 D#0 E0 F0 F#0 G0 G#0 A0 A#0 B0 C1 C#1 D1 D#1 E1 F1 F#1 G1 G#1 A1 A#1 B1'.split(/ /);
+CustomFields.FieldNote.prototype.editorListeners_ = [];
 
 /**
  * Show the inline free-text editor on top of the text and the note picker.
@@ -67,6 +72,13 @@ CustomFields.FieldNote.prototype.showEditor_ = function() {
  * @private
  */
 CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
+
+    // let createScrollPianoListener = (octave) => {
+    //     return function(){
+    //         console.log(octave)
+    //     }
+    // }
+
     let keySelectedListener = (el) => {
         let value = "";
         if (el.target.id === "") {
@@ -76,6 +88,29 @@ CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
             value = el.target.id;
         }
         this.setEditorValue_(CustomFields.FieldNote.NOTES.indexOf(value));
+    }
+
+    let highlightMiniMap = (el) => {
+        this.imageElement_.querySelectorAll("a").forEach((child) => {
+            child.className = "";
+        });
+        el.className = el.className + " selected";
+    }
+
+    let onScrolledListener = (el) => {
+        let minimap = this.imageElement_.querySelectorAll("a");
+        if (el.target.scrollLeft <= 225) highlightMiniMap(minimap[0]);
+        if (el.target.scrollLeft > 225 && el.target.scrollLeft <= 675) highlightMiniMap(minimap[1]);
+        if (el.target.scrollLeft > 675 && el.target.scrollLeft <= 1125) highlightMiniMap(minimap[2]);
+        if (el.target.scrollLeft > 1125) highlightMiniMap(minimap[3]);
+    }
+
+    let createMiniMapOctave = (octave) => {
+        let link = document.createElement('a')
+        link.setAttribute('href', `#octave-${octave}-${octave+1}`);
+        link.innerText = `${octave}-${octave+1}`;
+        link.setAttribute('ondragstart', 'return false;');
+        return link;
     }
 
     let createKey = (isWhite, note, octave) => {
@@ -89,13 +124,13 @@ CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
         } else {
             key.className = 'blackKey';
         }
-        Blockly.browserEvents.bind(key, 'click', this, keySelectedListener);
+        this.editorListeners_.push(Blockly.browserEvents.bind(key, 'click', this, keySelectedListener));
         return key;
     }
 
-    let createDualOctave = (name, startingOctave) => {
-        let octave = document.createElement('div')
-        octave.setAttribute('id', name);
+    let createDualOctave = (startingOctave) => {
+        let octave = document.createElement('div');
+        octave.setAttribute('id', `octave-${startingOctave}-${startingOctave+1}`);
         let keyboard = document.createElement('ul');
         keyboard.className = 'keyboard';
         keyboard.appendChild(createKey(true, 'C', startingOctave));
@@ -131,10 +166,19 @@ CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
 
     let piano = document.createElement('div');
     piano.className = 'piano';
+    let firstMiniMapOctave = createMiniMapOctave(0);
+    firstMiniMapOctave.classList.add('selected');
+    piano.appendChild(firstMiniMapOctave);
+    piano.appendChild(createMiniMapOctave(2));
+    piano.appendChild(createMiniMapOctave(4));
+    piano.appendChild(createMiniMapOctave(6));
     let octaves = document.createElement('div');
     octaves.className = 'octaves';
-    octaves.appendChild(createDualOctave('octave-0-1', 0));
-
+    octaves.appendChild(createDualOctave( 0));
+    octaves.appendChild(createDualOctave( 2));
+    octaves.appendChild(createDualOctave( 4));
+    octaves.appendChild(createDualOctave( 6));
+    this.editorListeners_.push(Blockly.browserEvents.bind(octaves, 'scroll', this, onScrolledListener));
     piano.appendChild(octaves);
 
     this.imageElement_ = piano;
@@ -146,14 +190,10 @@ CustomFields.FieldNote.prototype.dropdownCreate_ = function() {
  * @private
  */
 CustomFields.FieldNote.prototype.dropdownDispose_ = function() {
-    // if (this.clickWrapper_) {
-    //     Blockly.browserEvents.unbind(this.clickWrapper_);
-    //     this.clickWrapper_ = null;
-    // }
-    // if (this.moveWrapper_) {
-    //     Blockly.browserEvents.unbind(this.moveWrapper_);
-    //     this.moveWrapper_ = null;
-    // }
+    this.editorListeners_.forEach(l => {
+        Blockly.browserEvents.unbind(l);
+    });
+    this.editorListeners_ = [];
     this.imageElement_ = null;
 };
 
@@ -256,7 +296,32 @@ CustomFields.FieldNote.prototype.updateGraph_ = function() {
 
     // highlight the selected key
     let id = CustomFields.FieldNote.NOTES[this.getValue()];
-    this.imageElement_.querySelector(`[id="${id}"]`).classList.add("selected")
+    this.imageElement_.querySelector(`[id="${id}"]`).classList.add("selected");
+
+    // scroll to the right region on the piano, if needed
+    let newOctave = parseInt(id.match(/\d+/)[0]);
+
+    let octaves = this.imageElement_.getElementsByClassName("octaves")[0];
+    if (octaves){
+        switch(newOctave) {
+            case 0:
+            case 1: octaves.scrollLeft = 0;
+                break;
+            case 2:
+            case 3: octaves.scrollLeft = 226;
+                break;
+            case 4:
+            case 5: octaves.scrollLeft = 676;
+                break;
+            case 6:
+            case 7: octaves.scrollLeft = 1126;
+                break;
+        }
+    }
+
+    // set scroll style to smooth after first render
+    octaves.setAttribute('style', 'scroll-behavior:smooth;');
+
 };
 
 /**
