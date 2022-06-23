@@ -262,8 +262,8 @@
     createCustomBlock("violin", synths.violin);
     createCustomBlock("customSynth", synths.customSynth);
 
-    var blocklyArea = document.getElementById('blocklyArea');
-    var blocklyDiv = document.getElementById('blocklyDiv');
+    let blocklyArea = document.getElementById('blocklyArea');
+    let blocklyDiv = document.getElementById('blocklyDiv');
     let workspace = Blockly.inject('blocklyDiv', {
         toolbox: toolbox,
         horizontalLayout: false,
@@ -278,11 +278,11 @@
         },
         trashcan: false
     });
-    var onresize = function (e) {
+    let onresize = function (e) {
         // Compute the absolute coordinates and dimensions of blocklyArea.
-        var element = blocklyArea;
-        var x = 0;
-        var y = 0;
+        let element = blocklyArea;
+        let x = 0;
+        let y = 0;
         do {
             x += element.offsetLeft;
             y += element.offsetTop;
@@ -345,9 +345,9 @@
     }
 
     const buildGainNodeFromEnvelope = (context, options) => {
-        var volume = options.volume || 100;
+        let volume = options.volume || 100;
         const DEFAULT_SYNTH = {
-            wave: "sawtooth",
+            wave: "triangle",
             adsr: {
                 attackLevel: 0.8,
                 attackDuration: 0.01,
@@ -357,16 +357,16 @@
                 releaseDuration: 0.3
             }
         }
-        var synth = options.synth || DEFAULT_SYNTH;
-        var attackLevel = synth.adsr.attackLevel * (volume / 100);
-        var attackDuration = synth.adsr.attackDuration;
-        var decayLevel = synth.adsr.decayLevel * (volume / 100);
-        var decayDuration = synth.adsr.decayDuration;
-        var sustainDuration = synth.adsr.sustainDuration;
-        var releaseDuration = synth.adsr.releaseDuration;
-        var totalDuration = 0;
+        let synth = options.synth || DEFAULT_SYNTH;
+        let attackLevel = synth.adsr.attackLevel * (volume / 100);
+        let attackDuration = synth.adsr.attackDuration;
+        let decayLevel = synth.adsr.decayLevel * (volume / 100);
+        let decayDuration = synth.adsr.decayDuration;
+        let sustainDuration = synth.adsr.sustainDuration;
+        let releaseDuration = synth.adsr.releaseDuration;
+        let totalDuration = 0;
 
-        var gainNode = context.createGain();
+        let gainNode = context.createGain();
         gainNode.gain.setValueAtTime(0, 0 + context.currentTime + options.offset);
         totalDuration += attackDuration;
         gainNode.gain.linearRampToValueAtTime(attackLevel, totalDuration + context.currentTime + options.offset);
@@ -402,23 +402,24 @@
         }
 
         // Build the tree backwards, starting with the gain node for volume
-        var gainNode;
+        let gainNode;
         if (sourceNode.buffer) {
             // gainnode should be constant level to playback the buffer
             gainNode = context.createGain();
             gainNode.gain.value = convertToUnitInterval(volume)
         } else {
             // gainnode should follow the ADSR envelope defined in the synth
-            var output = buildGainNodeFromEnvelope(context, options);
+            let output = buildGainNodeFromEnvelope(context, options);
             gainNode = output.gainNode;
             if (output.duration > duration) duration = output.duration;
         }
         gainNode.connect(context.destination);
 
         // Add the filter node
-        var filterNode = context.createBiquadFilter();
-        filterNode.type = "lowpass";
+        let filterNode = context.createBiquadFilter();
+        filterNode.frequency.value = 44000;
         if (sourceNode.buffer) {
+            filterNode.type = "lowpass";
             filterNode.frequency.value = (sourceNode.buffer.sampleRate / 4) * convertToUnitInterval(filter);
         }
         filterNode.connect(gainNode);
@@ -445,7 +446,7 @@
 
     const playNote = (context, note, duration, options, blockid) => {
         let osc = context.createOscillator();
-        osc.type = "sawtooth";
+        osc.type = "triangle";
         if (options.synth) {
             osc.type = options.synth.wave;
         }
@@ -457,6 +458,10 @@
         }
 
         buildNodeTree(context, osc, duration, options, blockid);
+    }
+
+    const playChord = (context, notes, duration, options, blockid) => {
+        notes.forEach(note => playNote(context, note, duration, options, blockid));
     }
 
     const sleep = (context, duration, options, blockid) => {
@@ -535,8 +540,8 @@
 
         document.getElementById("export").onclick = () => {
             console.log("export workspace button pressed");
-            var file = new Blob([sessionStorage.getItem("workspace")], {type: "text/json"});
-            var a = document.createElement("a"),
+            let file = new Blob([sessionStorage.getItem("workspace")], {type: "text/json"});
+            let a = document.createElement("a"),
                 url = URL.createObjectURL(file);
             a.href = url;
             a.download = "musiclab-workspace.json";
@@ -550,13 +555,13 @@
 
         document.getElementById("import").onchange = (e) => {
             console.log("importing workspace from file");
-            var file = e.target.files[0];
+            let file = e.target.files[0];
             if (!file) {
                 return;
             }
-            var reader = new FileReader();
+            let reader = new FileReader();
             reader.onload = function (e) {
-                var json = e.target.result;
+                let json = e.target.result;
                 Blockly.serialization.workspaces.load(JSON.parse(json.toString()), workspace);
                 sessionStorage.setItem("workspace", json.toString());
             };

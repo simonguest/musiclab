@@ -21,10 +21,8 @@ export let playChord = {
 
     transpile: function (block) {
         let chord = block.getFieldValue('CHORD');
-        return `console.log(${chord});`;
-
-        // let duration = Blockly.JavaScript.valueToCode(block, 'DURATION', Blockly.JavaScript.ORDER_NONE);
-        // let freq = notes[noteIndex][1];
-        // return `var beatDuration = 60 / options.bpm; playNote(context, { freq: ${freq}}, ${duration} * beatDuration, options, "${block.id}");`;
+        let freqs = chord.map(c => { return { freq: notes[c][1]}});
+        let duration = Blockly.JavaScript.valueToCode(block, 'DURATION', Blockly.JavaScript.ORDER_NONE);
+        return `var beatDuration = 60 / options.bpm; playChord(context, ${JSON.stringify(freqs)}, ${duration} * beatDuration, options, "${block.id}");`;
     }
 };

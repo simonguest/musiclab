@@ -49,7 +49,7 @@ ChordField.prototype.dropdownCreate_ = function () {
             if (indexes.length <= MAX_CHORD_LENGTH) indexes.push(newIndex);
         }
 
-        this.setEditorValue_(indexes.map(i => i));
+        this.setEditorValue_(indexes.map(i => i)); // Need to do this to convert the array object into a literal
         this.render_();
     }
 
