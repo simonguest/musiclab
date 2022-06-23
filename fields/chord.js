@@ -1,17 +1,19 @@
 import {notes} from '../notes.js';
 
-export let NoteField = function (text) {
-    NoteField.superClass_.constructor.call(this, text);
+const MAX_CHORD_LENGTH = 7;
+
+export let ChordField = function (text) {
+    ChordField.superClass_.constructor.call(this, text);
     this.setSpellcheck(false);
 };
-Blockly.utils.object.inherits(NoteField, Blockly.FieldTextInput);
+Blockly.utils.object.inherits(ChordField, Blockly.FieldTextInput);
 
-NoteField.NOTES = notes.map(n => n[0]);
+ChordField.NOTES = notes.map(n => n[0]);
 
-NoteField.prototype.editorListeners_ = [];
+ChordField.prototype.editorListeners_ = [];
 
-NoteField.prototype.showEditor_ = function () {
-    NoteField.superClass_.showEditor_.call(this);
+ChordField.prototype.showEditor_ = function () {
+    ChordField.superClass_.showEditor_.call(this);
 
     let div = Blockly.WidgetDiv.getDiv();
     if (!div.firstChild) {
@@ -29,7 +31,7 @@ NoteField.prototype.showEditor_ = function () {
     this.updateGraph_();
 };
 
-NoteField.prototype.dropdownCreate_ = function () {
+ChordField.prototype.dropdownCreate_ = function () {
 
     let keySelectedListener = (el) => {
         let value = "";
@@ -39,7 +41,16 @@ NoteField.prototype.dropdownCreate_ = function () {
         } else {
             value = el.target.id;
         }
-        this.setEditorValue_(NoteField.NOTES.indexOf(value));
+        let newIndex = ChordField.NOTES.indexOf(value);
+        let indexes = this.getValue();
+        if (indexes.indexOf(newIndex) > -1) {
+            indexes.splice(indexes.indexOf(newIndex), 1);
+        } else {
+            if (indexes.length <= MAX_CHORD_LENGTH) indexes.push(newIndex);
+        }
+
+        this.setEditorValue_(indexes.map(i => i));
+        this.render_();
     }
 
     let highlightMiniMap = (el) => {
@@ -126,7 +137,7 @@ NoteField.prototype.dropdownCreate_ = function () {
     return this.imageElement_;
 };
 
-NoteField.prototype.dropdownDispose_ = function () {
+ChordField.prototype.dropdownDispose_ = function () {
     this.editorListeners_.forEach(l => {
         Blockly.browserEvents.unbind(l);
     });
@@ -134,42 +145,66 @@ NoteField.prototype.dropdownDispose_ = function () {
     this.imageElement_ = null;
 };
 
-NoteField.prototype.hide_ = function () {
+ChordField.prototype.hide_ = function () {
     Blockly.WidgetDiv.hide();
     Blockly.DropDownDiv.hideWithoutAnimation();
 };
 
-NoteField.prototype.valueToNote = function (value) {
-    return NoteField.NOTES[Number(value)];
+ChordField.prototype.valueToNotes = function (value) {
+    let notes = value.map(i => ChordField.NOTES[Number(i)]);
+    return notes.join();
 };
 
-NoteField.prototype.noteToValue = function (text) {
-    var normalizedText = text.trim().toUpperCase();
-    var i = NoteField.NOTES.indexOf(normalizedText);
-    return i > -1 ? i : undefined;
-};
-
-NoteField.prototype.getText_ = function () {
-    if (this.isBeingEdited_) {
-        return NoteField.superClass_.getText_.call(this);
+ChordField.prototype.notesToValue = function (text) {
+    let normalizedText = text.trim().toUpperCase().replace(/ /g,'');
+    let noteArray = normalizedText.split(',');
+    let indexes = [];
+    let errorInIndex = false;
+    noteArray.forEach(n => {
+        let i = ChordField.NOTES.indexOf(n);
+        // check if note already exists in chord
+        if (indexes.indexOf(i) > -1){
+            errorInIndex = true;
+        }
+        // add to index if valid
+        if (i > -1) {
+            indexes.push(i);
+        } else {
+            // invalid value in array
+            errorInIndex = true;
+        }
+    });
+    if (errorInIndex === true){
+        return undefined;
     }
-    return this.valueToNote(this.getValue()) || null;
+    if (indexes.length > MAX_CHORD_LENGTH){
+        // max length of chord is MAX_CHORD_LENGTH keys
+        return undefined;
+    }
+    return indexes;
 };
 
-NoteField.prototype.getEditorText_ = function (value) {
-    return this.valueToNote(value);
+ChordField.prototype.getText_ = function () {
+    if (this.isBeingEdited_) {
+        return ChordField.superClass_.getText_.call(this);
+    }
+    return this.valueToNotes(this.getValue()) || null;
 };
 
-NoteField.prototype.getValueFromEditorText_ = function (text) {
-    return this.noteToValue(text);
+ChordField.prototype.getEditorText_ = function (value) {
+    return this.valueToNotes(value);
 };
 
-NoteField.prototype.render_ = function () {
-    NoteField.superClass_.render_.call(this);
+ChordField.prototype.getValueFromEditorText_ = function (text) {
+    return this.notesToValue(text);
+};
+
+ChordField.prototype.render_ = function () {
+    ChordField.superClass_.render_.call(this);
     this.updateGraph_();
 };
 
-NoteField.prototype.updateGraph_ = function () {
+ChordField.prototype.updateGraph_ = function () {
     if (!this.imageElement_) {
         return;
     }
@@ -180,31 +215,35 @@ NoteField.prototype.updateGraph_ = function () {
     blackKeys.forEach(key => key.classList.remove("selected"));
 
     // highlight the selected key
-    let id = NoteField.NOTES[this.getValue()];
-    this.imageElement_.querySelector(`[id="${id}"]`).classList.add("selected");
+    let indexes = this.getValue();
+    indexes.forEach(i => {
+        this.imageElement_.querySelector(`[id="${ChordField.NOTES[i]}"]`).classList.add("selected");
+    })
 
     // scroll to the right region on the piano, if needed
-    let newOctave = parseInt(id.match(/\d+/)[0]);
-
     let octaves = this.imageElement_.getElementsByClassName("octaves")[0];
-    if (octaves) {
-        switch (newOctave) {
-            case 0:
-            case 1:
-                octaves.scrollLeft = 0;
-                break;
-            case 2:
-            case 3:
-                octaves.scrollLeft = 226;
-                break;
-            case 4:
-            case 5:
-                octaves.scrollLeft = 676;
-                break;
-            case 6:
-            case 7:
-                octaves.scrollLeft = 1126;
-                break;
+    if (indexes.length > 0) {
+        let newOctave = parseInt(ChordField.NOTES[indexes[0]].match(/\d+/)[0]);
+
+        if (octaves) {
+            switch (newOctave) {
+                case 0:
+                case 1:
+                    octaves.scrollLeft = 0;
+                    break;
+                case 2:
+                case 3:
+                    octaves.scrollLeft = 226;
+                    break;
+                case 4:
+                case 5:
+                    octaves.scrollLeft = 676;
+                    break;
+                case 6:
+                case 7:
+                    octaves.scrollLeft = 1126;
+                    break;
+            }
         }
     }
 
@@ -213,12 +252,12 @@ NoteField.prototype.updateGraph_ = function () {
 
 };
 
-NoteField.prototype.doClassValidation_ = function (opt_newValue) {
+ChordField.prototype.doClassValidation_ = function (opt_newValue) {
     if (opt_newValue === null || opt_newValue === undefined) {
         return null;
     }
-    var note = this.valueToNote(opt_newValue);
-    if (note) {
+    let notes = this.valueToNotes(opt_newValue);
+    if (notes) {
         return opt_newValue;
     }
     return null;
