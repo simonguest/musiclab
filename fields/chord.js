@@ -259,5 +259,8 @@ ChordField.prototype.doClassValidation_ = function (opt_newValue) {
     if (notes) {
         return opt_newValue;
     }
+    if (notes === ""){
+        return [];
+    }
     return null;
 };
