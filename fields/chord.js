@@ -34,6 +34,7 @@ ChordField.prototype.showEditor_ = function () {
 ChordField.prototype.dropdownCreate_ = function () {
 
     let keySelectedListener = (el) => {
+
         let value = "";
         if (el.target.id === "") {
             // clicked on a label; return the parent
@@ -42,15 +43,13 @@ ChordField.prototype.dropdownCreate_ = function () {
             value = el.target.id;
         }
         let newIndex = ChordField.NOTES.indexOf(value);
-        let indexes = this.getValue();
+        let indexes = [...this.getValue()]; // need to get by value to overcome a possibly bug in Blockly when duplicating blocks
         if (indexes.indexOf(newIndex) > -1) {
             indexes.splice(indexes.indexOf(newIndex), 1);
         } else {
             if (indexes.length <= MAX_CHORD_LENGTH) indexes.push(newIndex);
         }
-
-        this.setEditorValue_(indexes.map(i => i)); // Need to do this to convert the array object into a literal
-        this.render_();
+        this.setEditorValue_([...indexes]); // Need to do this to convert the array object into a literal
     }
 
     let highlightMiniMap = (el) => {

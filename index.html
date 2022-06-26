@@ -96,7 +96,7 @@
             background: black url("mini-octave.png");
             background-size: contain;
             background-repeat: no-repeat;
-            color:transparent;
+            color: transparent;
             border: 1px black;
             border-bottom-style: solid;
             text-decoration: none;
@@ -105,8 +105,9 @@
             margin: 0 0 0.5rem 0;
             position: relative;
         }
+
         .piano > a.selected {
-            background:linear-gradient(0deg, rgba(255, 150, 0, 0.5), rgba(255, 0, 150, 0.5)), url("mini-octave.png");
+            background: linear-gradient(0deg, rgba(255, 150, 0, 0.5), rgba(255, 0, 150, 0.5)), url("mini-octave.png");
             background-size: contain;
             background-repeat: no-repeat;
         }
@@ -237,6 +238,7 @@
     createCustomBlock("playNote", control.playNote);
     createCustomBlock("playNoteUntilEnd", control.playNoteUntilEnd);
     createCustomBlock("playChord", control.playChord);
+    createCustomBlock("playChordUntilEnd", control.playChordUntilEnd);
     createCustomBlock("playPianoKey", control.playPianoKey);
     createCustomBlock("playPianoKeyUntilEnd", control.playPianoKeyUntilEnd);
     createCustomBlock("playSample", control.playSample);
@@ -300,7 +302,7 @@
     Blockly.svgResize(workspace);
 
     workspace.addChangeListener((ev) => {
-        if ((ev.type === Blockly.Events.BLOCK_MOVE) || (ev.type === Blockly.Events.BLOCK_CHANGE) || (ev.type === Blockly.Events.BLOCK_DELETE)) {
+        if ((ev.type === Blockly.Events.BLOCK_MOVE) || (ev.type === Blockly.Events.BLOCK_CHANGE) || (ev.type === Blockly.Events.BLOCK_DELETE) || (ev.type === Blockly.Events.BLOCK_CREATE)) {
             console.log("Writing workspace to session storage");
             let json = Blockly.serialization.workspaces.save(workspace);
             sessionStorage.setItem("workspace", JSON.stringify(json));
@@ -461,7 +463,38 @@
     }
 
     const playChord = (context, notes, duration, options, blockid) => {
-        notes.forEach(note => playNote(context, note, duration, options, blockid));
+        switch (options.arpeggio) {
+            case "all":
+                notes.forEach(note => playNote(context, note, duration, options, blockid));
+                break;
+            case "up":
+                notes.forEach(note => {
+                    playNote(context, note, duration / notes.length, options, blockid);
+                    sleep(context, duration / notes.length, options, blockid);
+                });
+                options.offset -= duration;
+                break;
+            case "down":
+                notes.reverse().forEach(note => {
+                    playNote(context, note, duration / notes.length, options, blockid);
+                    sleep(context, duration / notes.length, options, blockid);
+                });
+                options.offset -= duration;
+                break;
+            case "random":
+                let randomNotes = notes.map(value => ({value, sort: Math.random()}))
+                    .sort((a, b) => a.sort - b.sort)
+                    .map(({value}) => value);
+                randomNotes.forEach(note => {
+                    playNote(context, note, duration / notes.length, options, blockid);
+                    sleep(context, duration / notes.length, options, blockid);
+                });
+                options.offset -= duration;
+                break;
+            default:
+                notes.forEach(note => playNote(context, note, duration, options, blockid));
+        }
+
     }
 
     const sleep = (context, duration, options, blockid) => {
