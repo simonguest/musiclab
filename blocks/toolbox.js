@@ -251,6 +251,10 @@ export let toolbox = {
                 },
                 {
                     "kind":"block",
+                    "type":"setSynth"
+                },
+                {
+                    "kind":"block",
                     "type":"volume",
                     "inputs": {
                         "VOLUME": {
@@ -309,12 +313,8 @@ export let toolbox = {
         },
         {
           "kind":"category",
-          "name":"Synths",
+          "name":"Synth Library",
           "contents": [
-              {
-                "kind":"block",
-                "type":"setSynth"
-              },
               {
                   "kind":"block",
                   "type":"mystic"
