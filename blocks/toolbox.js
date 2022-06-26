@@ -195,6 +195,34 @@ export let toolbox = {
                 },
                 {
                     "kind":"block",
+                    "type":"playChord",
+                    "inputs": {
+                        "DURATION": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind":"block",
+                    "type":"playChordUntilEnd",
+                    "inputs": {
+                        "DURATION": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind":"block",
                     "type":"sleep",
                     "inputs": {
                         "DURATION": {
@@ -220,6 +248,10 @@ export let toolbox = {
                             }
                         }
                     }
+                },
+                {
+                    "kind":"block",
+                    "type":"setSynth"
                 },
                 {
                     "kind":"block",
@@ -281,12 +313,8 @@ export let toolbox = {
         },
         {
           "kind":"category",
-          "name":"Synths",
+          "name":"Synth Library",
           "contents": [
-              {
-                "kind":"block",
-                "type":"setSynth"
-              },
               {
                   "kind":"block",
                   "type":"mystic"

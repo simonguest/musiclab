@@ -1,6 +1,8 @@
 import {track} from "./track.js";
 import {playNote} from "./playNote.js";
 import {playNoteUntilEnd} from "./playNoteUntilEnd.js";
+import {playChord} from "./playChord.js";
+import {playChordUntilEnd} from "./playChordUntilEnd.js";
 import {playPianoKey} from "./playPianoKey.js";
 import {playPianoKeyUntilEnd} from "./playPianoKeyUntilEnd.js";
 import {playSample} from "./playSample.js";
@@ -12,4 +14,20 @@ import {pitch} from "./pitch.js";
 import {filter} from "./filter.js";
 import {bpm} from "./bpm.js";
 
-export {track, playNote, playNoteUntilEnd, playPianoKey, playPianoKeyUntilEnd, playSample, playSampleUntilEnd, sleepSeconds, sleepBeats, volume, pitch, filter, bpm};
+export {
+    track,
+    playNote,
+    playNoteUntilEnd,
+    playChord,
+    playChordUntilEnd,
+    playPianoKey,
+    playPianoKeyUntilEnd,
+    playSample,
+    playSampleUntilEnd,
+    sleepSeconds,
+    sleepBeats,
+    volume,
+    pitch,
+    filter,
+    bpm
+};
