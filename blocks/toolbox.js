@@ -151,6 +151,34 @@ export let toolbox = {
                 },
                 {
                     "kind":"block",
+                    "type":"playChord",
+                    "inputs": {
+                        "DURATION": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind":"block",
+                    "type":"playChordUntilEnd",
+                    "inputs": {
+                        "DURATION": {
+                            "block": {
+                                "type": "math_number",
+                                "fields": {
+                                    "NUM": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind":"block",
                     "type":"playPianoKey",
                     "inputs": {
                         "KEY": {
@@ -183,34 +211,6 @@ export let toolbox = {
                                 }
                             }
                         },
-                        "DURATION": {
-                            "block": {
-                                "type": "math_number",
-                                "fields": {
-                                    "NUM": 1
-                                }
-                            }
-                        }
-                    }
-                },
-                {
-                    "kind":"block",
-                    "type":"playChord",
-                    "inputs": {
-                        "DURATION": {
-                            "block": {
-                                "type": "math_number",
-                                "fields": {
-                                    "NUM": 1
-                                }
-                            }
-                        }
-                    }
-                },
-                {
-                    "kind":"block",
-                    "type":"playChordUntilEnd",
-                    "inputs": {
                         "DURATION": {
                             "block": {
                                 "type": "math_number",

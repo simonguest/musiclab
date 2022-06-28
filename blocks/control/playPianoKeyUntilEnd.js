@@ -2,7 +2,7 @@ export let playPianoKeyUntilEnd = {
     init: function () {
         this.appendValueInput("KEY")
             .setCheck("Number")
-            .appendField("Play Piano Key");
+            .appendField("Play Note Number");
         this.appendValueInput("DURATION")
             .setCheck("Number")
             .appendField("for");
