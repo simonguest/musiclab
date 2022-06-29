@@ -144,7 +144,7 @@
         return new Promise(async (resolve) => {
             for (let f = 0; f < filenames.length; f++) {
                 if (!samples.get(filenames[f])) {
-                    let buffer = await loadFile(`/samples/${filenames[f]}.wav`);
+                    let buffer = await loadFile(`./samples/${filenames[f]}.wav`);
                     let decodedBuffer = await audioContext.decodeAudioData(buffer);
                     samples.set(filenames[f], decodedBuffer);
                     console.log(`Loaded audio sample ${filenames[f]}`);
