@@ -1,1 +1,239 @@
-{"blocks":{"languageVersion":0,"blocks":[{"type":"track","id":"0LSl/;/S^ve|qQw2{*pg","x":58,"y":217,"fields":{"NAME":"Choir Melody"},"inputs":{"STATEMENTS":{"block":{"type":"pitch","id":"JyX_wgTu)RdhIILq`oRz","inputs":{"PITCH":{"block":{"type":"math_number","id":"b,K`UxJ3`:L]iy:V$%MD","fields":{"NUM":1}}}},"next":{"block":{"type":"playSample","id":"QD3.vCK*DPgL];+ypj{N","inputs":{"SAMPLE":{"block":{"type":"choir","id":"`u$JK{V$9iVy7UK:US~W","fields":{"CHOIRTYPE":"choir1"}}}},"next":{"block":{"type":"sleepBeats","id":"WrEIo^g`#x?u/Wp^|_lo","inputs":{"DURATION":{"block":{"type":"math_number","id":"D!Mn5s|HOn5!BAyyr1x|","fields":{"NUM":1}}}},"next":{"block":{"type":"pitch","id":"aGAb|M{_tPs@sB-Vb.v,","inputs":{"PITCH":{"block":{"type":"math_number","id":"hKrva+dbq+0m[t]bOB`A","fields":{"NUM":0.9}}}},"next":{"block":{"type":"playSample","id":"JHSiCaY=E#F{xbz^B`Jg","inputs":{"SAMPLE":{"block":{"type":"choir","id":"Q/dQ0F3D*X-;:a@m-QsK","fields":{"CHOIRTYPE":"choir1"}}}},"next":{"block":{"type":"sleepBeats","id":"ASF%%hwV;42Wii9;hQpR","inputs":{"DURATION":{"block":{"type":"math_number","id":"2f4OWN)etQfM;/oUvs%P","fields":{"NUM":1.5}}}},"next":{"block":{"type":"pitch","id":"8igo#vZa7u83d`]2UCJY","inputs":{"PITCH":{"block":{"type":"math_number","id":"9{CIVwr5.y=BLB*?[yn^","fields":{"NUM":1.2}}}},"next":{"block":{"type":"playSample","id":"DO;Tc}Y=eSEB$CKvmFQ7","inputs":{"SAMPLE":{"block":{"type":"choir","id":"uE_@Y^X.^WO]2A@=idjP","fields":{"CHOIRTYPE":"choir1"}}}},"next":{"block":{"type":"sleepBeats","id":"QMaU:TX=Ut?Y!x(1g;Oh","inputs":{"DURATION":{"block":{"type":"math_number","id":"Iy/f}QONoqcDhxI#C)BQ","fields":{"NUM":1}}}},"next":{"block":{"type":"playSample","id":"bKi-*H3)bF:P=39%YWM.","inputs":{"SAMPLE":{"block":{"type":"choir","id":"[PI|309vp+Z-n5sm]?`P","fields":{"CHOIRTYPE":"choir1"}}}}}}}}}}}}}}}}}}}}}}}}}},{"type":"track","id":").|k}#2-]g8X24T=`@Bw","x":57,"y":86,"fields":{"NAME":"Choir Backing"},"inputs":{"STATEMENTS":{"block":{"type":"pitch","id":"#thuS6e3@!@DotKCt*+3","inputs":{"PITCH":{"block":{"type":"math_number","id":".ygs[+1pY)B]GH^j[=hn","fields":{"NUM":0.45}}}},"next":{"block":{"type":"playSample","id":"F_nH=lwv#[v0;.b@S}U.","inputs":{"SAMPLE":{"block":{"type":"choir","id":"%Www2WFW!pv47V6_F35!","fields":{"CHOIRTYPE":"choir1"}}}}}}}}}}]},"variables":[{"name":"i","id":";_0Yh*Xhz[HF3zSUS;MQ"}]}
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "track",
+        "id": "0LSl/;/S^ve|qQw2{*pg",
+        "x": 58,
+        "y": 217,
+        "fields": {
+          "NAME": "Choir Melody"
+        },
+        "inputs": {
+          "STATEMENTS": {
+            "block": {
+              "type": "pitch",
+              "id": "JyX_wgTu)RdhIILq`oRz",
+              "inputs": {
+                "PITCH": {
+                  "block": {
+                    "type": "math_number",
+                    "id": "b,K`UxJ3`:L]iy:V$%MD",
+                    "fields": {
+                      "NUM": 1
+                    }
+                  }
+                }
+              },
+              "next": {
+                "block": {
+                  "type": "playSample",
+                  "id": "QD3.vCK*DPgL];+ypj{N",
+                  "inputs": {
+                    "SAMPLE": {
+                      "block": {
+                        "type": "choir",
+                        "id": "`u$JK{V$9iVy7UK:US~W",
+                        "fields": {
+                          "SAMPLE_FILE": "effects/choir1"
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "sleepBeats",
+                      "id": "WrEIo^g`#x?u/Wp^|_lo",
+                      "inputs": {
+                        "DURATION": {
+                          "block": {
+                            "type": "math_number",
+                            "id": "D!Mn5s|HOn5!BAyyr1x|",
+                            "fields": {
+                              "NUM": 1
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "pitch",
+                          "id": "aGAb|M{_tPs@sB-Vb.v,",
+                          "inputs": {
+                            "PITCH": {
+                              "block": {
+                                "type": "math_number",
+                                "id": "hKrva+dbq+0m[t]bOB`A",
+                                "fields": {
+                                  "NUM": 0.9
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "playSample",
+                              "id": "JHSiCaY=E#F{xbz^B`Jg",
+                              "inputs": {
+                                "SAMPLE": {
+                                  "block": {
+                                    "type": "choir",
+                                    "id": "Q/dQ0F3D*X-;:a@m-QsK",
+                                    "fields": {
+                                      "SAMPLE_FILE": "effects/choir1"
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "sleepBeats",
+                                  "id": "ASF%%hwV;42Wii9;hQpR",
+                                  "inputs": {
+                                    "DURATION": {
+                                      "block": {
+                                        "type": "math_number",
+                                        "id": "2f4OWN)etQfM;/oUvs%P",
+                                        "fields": {
+                                          "NUM": 1.5
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "next": {
+                                    "block": {
+                                      "type": "pitch",
+                                      "id": "8igo#vZa7u83d`]2UCJY",
+                                      "inputs": {
+                                        "PITCH": {
+                                          "block": {
+                                            "type": "math_number",
+                                            "id": "9{CIVwr5.y=BLB*?[yn^",
+                                            "fields": {
+                                              "NUM": 1.2
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "next": {
+                                        "block": {
+                                          "type": "playSample",
+                                          "id": "DO;Tc}Y=eSEB$CKvmFQ7",
+                                          "inputs": {
+                                            "SAMPLE": {
+                                              "block": {
+                                                "type": "choir",
+                                                "id": "uE_@Y^X.^WO]2A@=idjP",
+                                                "fields": {
+                                                  "SAMPLE_FILE": "effects/choir1"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "next": {
+                                            "block": {
+                                              "type": "sleepBeats",
+                                              "id": "QMaU:TX=Ut?Y!x(1g;Oh",
+                                              "inputs": {
+                                                "DURATION": {
+                                                  "block": {
+                                                    "type": "math_number",
+                                                    "id": "Iy/f}QONoqcDhxI#C)BQ",
+                                                    "fields": {
+                                                      "NUM": 1
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "next": {
+                                                "block": {
+                                                  "type": "playSample",
+                                                  "id": "bKi-*H3)bF:P=39%YWM.",
+                                                  "inputs": {
+                                                    "SAMPLE": {
+                                                      "block": {
+                                                        "type": "choir",
+                                                        "id": "[PI|309vp+Z-n5sm]?`P",
+                                                        "fields": {
+                                                          "SAMPLE_FILE": "effects/choir1"
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "track",
+        "id": ").|k}#2-]g8X24T=`@Bw",
+        "x": 57,
+        "y": 86,
+        "fields": {
+          "NAME": "Choir Backing"
+        },
+        "inputs": {
+          "STATEMENTS": {
+            "block": {
+              "type": "pitch",
+              "id": "#thuS6e3@!@DotKCt*+3",
+              "inputs": {
+                "PITCH": {
+                  "block": {
+                    "type": "math_number",
+                    "id": ".ygs[+1pY)B]GH^j[=hn",
+                    "fields": {
+                      "NUM": 0.45
+                    }
+                  }
+                }
+              },
+              "next": {
+                "block": {
+                  "type": "playSample",
+                  "id": "F_nH=lwv#[v0;.b@S}U.",
+                  "inputs": {
+                    "SAMPLE": {
+                      "block": {
+                        "type": "choir",
+                        "id": "%Www2WFW!pv47V6_F35!",
+                        "fields": {
+                          "SAMPLE_FILE": "effects/choir1"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "variables": [
+    {
+      "name": "i",
+      "id": ";_0Yh*Xhz[HF3zSUS;MQ"
+    }
+  ]
+}

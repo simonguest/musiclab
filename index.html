@@ -159,7 +159,7 @@
         let matches = [];
         let match = sampleFilesRe.exec(workspace);
         do {
-            matches.push(match.groups.filename);
+            if (match) matches.push(match.groups.filename);
         } while ((match = sampleFilesRe.exec(workspace)) !== null)
         return [...new Set(matches)];
     }
