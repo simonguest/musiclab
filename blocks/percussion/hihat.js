@@ -2,7 +2,7 @@ export let hihat = {
     init: function() {
         this.appendDummyInput()
             .appendField("Hi-Hat")
-            .appendField(new Blockly.FieldDropdown([["Basic Hi-Hat","hihat"]]), "HIHATDRUMTYPE");
+            .appendField(new Blockly.FieldDropdown([["Basic Hi-Hat","percussion/hihat"]]), "SAMPLE_FILE");
         this.setOutput(true, "String");
         this.setColour(230);
         this.setTooltip("");
@@ -10,7 +10,7 @@ export let hihat = {
     },
 
     transpile: function (block) {
-        let hihatDrumType = block.getFieldValue('HIHATDRUMTYPE');
+        let hihatDrumType = block.getFieldValue('SAMPLE_FILE');
         let code = `"${hihatDrumType}"`;
         return [code, Blockly.JavaScript.ORDER_NONE];
     }

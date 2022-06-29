@@ -140,18 +140,28 @@
         return await response.arrayBuffer();
     }
 
-    const loadSamples = async (audioContext, filenames) => {
-        return new Promise((resolve) => {
-            let samples = new Map();
-            filenames.forEach(async (filename) => {
-                let buffer = await loadFile(filename);
-                let decodedBuffer = await audioContext.decodeAudioData(buffer);
-                let sampleName = /.+\/(.*).wav/.exec(filename)[1];
-                samples.set(sampleName, decodedBuffer);
-                console.log(`Added ${sampleName} to audio samples.`);
-            });
+    const loadSamples = async (audioContext, samples, filenames) => {
+        return new Promise(async (resolve) => {
+            for (let f = 0; f < filenames.length; f++) {
+                if (!samples.get(filenames[f])) {
+                    let buffer = await loadFile(`/samples/${filenames[f]}.wav`);
+                    let decodedBuffer = await audioContext.decodeAudioData(buffer);
+                    samples.set(filenames[f], decodedBuffer);
+                    console.log(`Loaded audio sample ${filenames[f]}`);
+                }
+            }
             resolve(samples);
         });
+    }
+
+    const findSamplesInWorkspace = (workspace) => {
+        let sampleFilesRe = /"SAMPLE_FILE".?:.?"(?<filename>.*?)"/mg
+        let matches = [];
+        let match = sampleFilesRe.exec(workspace);
+        do {
+            if (match) matches.push(match.groups.filename);
+        } while ((match = sampleFilesRe.exec(workspace)) !== null)
+        return [...new Set(matches)];
     }
 
     const convertToUnitInterval = (value) => {
@@ -330,19 +340,21 @@
         options.offset += duration;
     }
 
+
     async function start() {
         console.log("Loading workspace from session storage");
         let jsonStr = sessionStorage.getItem("workspace");
         if (jsonStr) Blockly.serialization.workspaces.load(JSON.parse(jsonStr), workspace);
 
         let context = new window.AudioContext();
-        console.log(context);
 
-        let samples = await loadSamples(context, ["./samples/snare.wav", "./samples/hihat.wav", "./samples/kick.wav", "./samples/techno.wav", "./samples/techno2.wav", "./samples/techno3.wav", "./samples/techno4.wav", "./samples/techno5.wav", "./samples/choir1.wav"]);
-        console.log(samples);
+        let samples = new Map();
 
-        document.getElementById("play").onclick = () => {
+        document.getElementById("play").onclick = async () => {
             console.log("play button pressed");
+
+            // Dynamically load the sample wav files required by the workspace
+            samples = await loadSamples(context, samples, findSamplesInWorkspace(sessionStorage.getItem("workspace")));
 
             // Generate the required code
             let code = Blockly.JavaScript.workspaceToCode(workspace);
