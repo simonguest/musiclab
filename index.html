@@ -58,6 +58,7 @@
     import {toolbox} from "./blocks/toolbox.js";
 
     createCustomBlock("track", control.track);
+    createCustomBlock("trackOnKeyPress", control.trackOnKeyPress);
     createCustomBlock("playNote", control.playNote);
     createCustomBlock("playNoteUntilEnd", control.playNoteUntilEnd);
     createCustomBlock("playChord", control.playChord);
@@ -350,6 +351,11 @@
 
         let samples = new Map();
 
+        let keyup_producer = new BroadcastChannel('keyup_channel');
+        let keyup_consumer = new BroadcastChannel('keyup_channel');
+        document.addEventListener('keyup', (e) => { console.log("GLOBAL"); keyup_producer.postMessage(e.key); });
+        let eventListeners = [];
+
         document.getElementById("play").onclick = async () => {
             console.log("play button pressed");
 
@@ -361,7 +367,7 @@
             console.log(code);
 
             context = new window.AudioContext();
-            var options = {bpm: 100, offset: 0};
+            let options = {bpm: 100, offset: 0};
             eval(code);
         }
 
@@ -377,6 +383,8 @@
 
         document.getElementById("stop").onclick = () => {
             console.log("stop button pressed");
+            eventListeners.forEach( l => { keyup_consumer.removeEventListener('message', l); });
+            eventListeners = [];
             context.close();
         }
 
