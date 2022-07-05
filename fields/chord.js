@@ -155,14 +155,14 @@ ChordField.prototype.valueToNotes = function (value) {
 };
 
 ChordField.prototype.notesToValue = function (text) {
-    let normalizedText = text.trim().toUpperCase().replace(/ /g,'');
+    let normalizedText = text.trim().toUpperCase().replace(/ /g, '');
     let noteArray = normalizedText.split(',');
     let indexes = [];
     let errorInIndex = false;
     noteArray.forEach(n => {
         let i = ChordField.NOTES.indexOf(n);
         // check if note already exists in chord
-        if (indexes.indexOf(i) > -1){
+        if (indexes.indexOf(i) > -1) {
             errorInIndex = true;
         }
         // add to index if valid
@@ -173,10 +173,10 @@ ChordField.prototype.notesToValue = function (text) {
             errorInIndex = true;
         }
     });
-    if (errorInIndex === true){
+    if (errorInIndex === true) {
         return undefined;
     }
-    if (indexes.length > MAX_CHORD_LENGTH){
+    if (indexes.length > MAX_CHORD_LENGTH) {
         // max length of chord is MAX_CHORD_LENGTH keys
         return undefined;
     }
@@ -248,6 +248,9 @@ ChordField.prototype.updateGraph_ = function () {
 
     // set scroll style to smooth after first render
     octaves.setAttribute('style', 'scroll-behavior:smooth;');
+    if (navigator.userAgent.indexOf('AppleWebKit') !== -1) {
+        octaves.setAttribute('style', 'scroll-behavior:auto;');
+    }
 
 };
 
@@ -259,7 +262,7 @@ ChordField.prototype.doClassValidation_ = function (opt_newValue) {
     if (notes) {
         return opt_newValue;
     }
-    if (notes === ""){
+    if (notes === "") {
         return [];
     }
     return null;
