@@ -1,4 +1,5 @@
 import {track} from "./track.js";
+import {trackOnKeyPress} from "./trackOnKeyPress.js";
 import {playNote} from "./playNote.js";
 import {playNoteUntilEnd} from "./playNoteUntilEnd.js";
 import {playChord} from "./playChord.js";
@@ -16,6 +17,7 @@ import {bpm} from "./bpm.js";
 
 export {
     track,
+    trackOnKeyPress,
     playNote,
     playNoteUntilEnd,
     playChord,

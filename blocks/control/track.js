@@ -1,7 +1,7 @@
 export let track = {
     init: function () {
             this.appendDummyInput()
-                .appendField("Track")
+                .appendField("Play Track")
                 .appendField(new Blockly.FieldTextInput("Track 1"), "NAME");
             this.appendStatementInput("STATEMENTS")
                 .setCheck(null);

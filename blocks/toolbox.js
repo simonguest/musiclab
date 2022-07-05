@@ -115,6 +115,10 @@ export let toolbox = {
                 },
                 {
                     "kind":"block",
+                    "type":"trackOnKeyPress"
+                },
+                {
+                    "kind":"block",
                     "type":"playSample"
                 },
                 {
