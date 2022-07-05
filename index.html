@@ -160,6 +160,7 @@
         pauseButton.removeAttribute("disabled");
 
         context = new window.AudioContext();
+        await context.resume(); // Safari webaudio starts in a paused state, so this is required
 
         // Dynamically load the sample wav files required by the workspace
         samples = await loadSamples(context, samples, findSamplesInWorkspace(sessionStorage.getItem("workspace")));
