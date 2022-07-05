@@ -168,8 +168,7 @@
         let code = Blockly.JavaScript.workspaceToCode(workspace);
         console.log(code);
 
-        eval("options = {bpm: 100, offset: 0}; " + code + " onPlaybackCompleted(context, options, () => { stop() });");
-
+        eval("var options = {bpm: 100, offset: 0}; " + code + "if (eventListeners.length === 0) { onPlaybackCompleted(context, options, () => { stop() }) };");
     }
 
     function stop() {
@@ -211,22 +210,26 @@
             keyup_producer.postMessage(e.key);
         });
 
-        playButton.onclick = async () => {
+        playButton.onmousedown = async (e) => {
+            e.preventDefault();
             console.log("play button pressed");
             await play();
         }
 
-        pauseButton.onclick = () => {
+        pauseButton.onmousedown = (e) => {
+            e.preventDefault();
             console.log("pause button pressed");
             pause();
         }
 
-        resumeButton.onclick = () => {
+        resumeButton.onmousedown = (e) => {
+            e.preventDefault();
             console.log("resume button pressed");
             resume();
         }
 
-        stopButton.onclick = () => {
+        stopButton.onclick = (e) => {
+            e.preventDefault();
             console.log("stop button pressed");
             stop();
         }

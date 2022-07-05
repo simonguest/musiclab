@@ -19,8 +19,6 @@ export let trackOnKeyPress = {
     },
 
     transpile: function (block) {
-        console.log(block);
-
         let statements = Blockly.JavaScript.statementToCode(block, 'STATEMENTS');
         let code = `var options = { bpm: 100, offset: 0}; ${statements}`;
         let key = block.getFieldValue('KEY');

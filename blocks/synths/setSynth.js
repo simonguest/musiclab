@@ -12,7 +12,6 @@ export let setSynth = {
     },
 
     transpile: function (block) {
-        console.log(block);
         let synth = Blockly.JavaScript.valueToCode(block, 'SYNTH', Blockly.JavaScript.ORDER_NONE);
         let code = `options.synth = ${synth};`;
         return code;
