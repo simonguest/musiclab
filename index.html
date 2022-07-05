@@ -16,9 +16,9 @@
     <tr>
         <td>
             <button id="play">Play</button>
-            <button id="pause">Pause</button>
-            <button id="resume">Resume</button>
-            <button id="stop">Stop</button>
+            <button id="pause" disabled>Pause</button>
+            <button id="resume" disabled>Resume</button>
+            <button id="stop" disabled>Stop</button>
             <button id="debug">Debug</button>
             <button id="clear">Clear Workspace</button>
             <select id="examples">
@@ -47,7 +47,10 @@
         Blockly.JavaScript[name] = blockType["transpile"];
     }
 
-    import {notes} from "./notes.js";
+
+    import {loadSamples, findSamplesInWorkspace} from "./samples.js";
+
+    import {playSample, playNote, playChord, sleep, onPlaybackCompleted} from "./audio.js";
 
     import * as control from "./blocks/control/index.js";
     import * as percussion from "./blocks/percussion/index.js";
@@ -133,259 +136,99 @@
         }
     });
 
-    const loadFile = async (filename) => {
-        const response = await fetch(filename);
-        if (!response.ok) {
-            console.error(`HTTP Error: ${response.status}`);
+    const clearBlocklyHighlights = () => {
+        let highlighted = document.evaluate("//*[contains(@class, 'blocklySelected')]", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+        for (let h=0; h<highlighted.snapshotLength; h++){
+            highlighted.snapshotItem(h).classList.remove("blocklySelected");
         }
-        return await response.arrayBuffer();
     }
 
-    const loadSamples = async (audioContext, samples, filenames) => {
-        return new Promise(async (resolve) => {
-            for (let f = 0; f < filenames.length; f++) {
-                if (!samples.get(filenames[f])) {
-                    let buffer = await loadFile(`./samples/${filenames[f]}.wav`);
-                    let decodedBuffer = await audioContext.decodeAudioData(buffer);
-                    samples.set(filenames[f], decodedBuffer);
-                    console.log(`Loaded audio sample ${filenames[f]}`);
-                }
-            }
-            resolve(samples);
+    let context = new window.AudioContext();
+    let eventListeners = [];
+    let keyup_consumer = new BroadcastChannel('keyup_channel');
+    let samples = new Map();
+
+    let playButton = document.getElementById("play");
+    let stopButton = document.getElementById("stop");
+    let pauseButton = document.getElementById("pause");
+    let resumeButton = document.getElementById("resume");
+
+    async function play() {
+        console.log("Playing");
+        playButton.setAttribute("disabled", "true");
+        stopButton.removeAttribute("disabled");
+        pauseButton.removeAttribute("disabled");
+
+        context = new window.AudioContext();
+
+        // Dynamically load the sample wav files required by the workspace
+        samples = await loadSamples(context, samples, findSamplesInWorkspace(sessionStorage.getItem("workspace")));
+
+        // Generate the required code
+        let code = Blockly.JavaScript.workspaceToCode(workspace);
+        console.log(code);
+
+        eval("options = {bpm: 100, offset: 0}; " + code + " onPlaybackCompleted(context, options, () => { stop() });");
+
+    }
+
+    function stop() {
+        console.log("Stopping playback");
+        stopButton.setAttribute("disabled", "true");
+        playButton.removeAttribute("disabled");
+        pauseButton.setAttribute("disabled", "true");
+        resumeButton.setAttribute("disabled", "true");
+
+        eventListeners.forEach(l => {
+            keyup_consumer.removeEventListener('message', l);
         });
+        eventListeners = [];
+        context.close();
+
+        clearBlocklyHighlights();
     }
 
-    const findSamplesInWorkspace = (workspace) => {
-        let sampleFilesRe = /"SAMPLE_FILE".?:.?"(?<filename>.*?)"/mg
-        let matches = [];
-        let match = sampleFilesRe.exec(workspace);
-        do {
-            if (match) matches.push(match.groups.filename);
-        } while ((match = sampleFilesRe.exec(workspace)) !== null)
-        return [...new Set(matches)];
+    function pause() {
+        pauseButton.setAttribute("disabled", "true");
+        resumeButton.removeAttribute("disabled");
+        context.suspend();
     }
 
-    const convertToUnitInterval = (value) => {
-        // Convert value to fixed point between 0 and 1 for the WebAudio API
-        value = Math.abs(value);
-        if (value > 100) value = 100;
-        return value / 100;
+    function resume() {
+        resumeButton.setAttribute("disabled", "true");
+        pauseButton.removeAttribute("disabled");
+        context.resume();
     }
 
-    const highlightBlock = (id) => {
-        document.evaluate(`//*[@data-id='${id}']`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.classList.add("blocklySelected")
-    }
-
-    const removeHighlight = (id) => {
-        document.evaluate(`//*[@data-id='${id}']`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.classList.remove("blocklySelected")
-    }
-
-    const buildGainNodeFromEnvelope = (context, options) => {
-        let volume = options.volume || 100;
-        const DEFAULT_SYNTH = {
-            wave: "triangle",
-            adsr: {
-                attackLevel: 0.8,
-                attackDuration: 0.01,
-                decayLevel: 0.35,
-                decayDuration: 0.1,
-                sustainDuration: 0.1,
-                releaseDuration: 0.3
-            }
-        }
-        let synth = options.synth || DEFAULT_SYNTH;
-        let attackLevel = synth.adsr.attackLevel * (volume / 100);
-        let attackDuration = synth.adsr.attackDuration;
-        let decayLevel = synth.adsr.decayLevel * (volume / 100);
-        let decayDuration = synth.adsr.decayDuration;
-        let sustainDuration = synth.adsr.sustainDuration;
-        let releaseDuration = synth.adsr.releaseDuration;
-        let totalDuration = 0;
-
-        let gainNode = context.createGain();
-        gainNode.gain.setValueAtTime(0, 0 + context.currentTime + options.offset);
-        totalDuration += attackDuration;
-        gainNode.gain.linearRampToValueAtTime(attackLevel, totalDuration + context.currentTime + options.offset);
-        totalDuration += decayDuration;
-        gainNode.gain.linearRampToValueAtTime(decayLevel, totalDuration + context.currentTime + options.offset);
-        totalDuration += sustainDuration;
-        gainNode.gain.setValueAtTime(decayLevel, totalDuration + context.currentTime + options.offset);
-        totalDuration += releaseDuration;
-        gainNode.gain.linearRampToValueAtTime(0, totalDuration + context.currentTime + options.offset);
-
-        return {gainNode: gainNode, duration: totalDuration};
-    }
-
-    const buildNodeTree = (context, sourceNode, duration, options, blockid) => {
-        let volume = options.volume || 100;
-        let filter = options.filter || 100;
-        let offset = options.offset || 0;
-
-        // highlight the active block
-        // null src is an empty source used to highlight the block
-        // (to compensate as there is no onStart event handler in WebAudio AudioBufferSourceNode )
-        let nullSource = context.createBufferSource();
-        if (blockid) {
-            sourceNode.onended = () => {
-                removeHighlight(blockid);
-            }
-
-            nullSource.connect(context.destination);
-            nullSource.buffer = context.createBuffer(1, 1, 10000);
-            nullSource.onended = () => {
-                highlightBlock(blockid);
-            }
-        }
-
-        // Build the tree backwards, starting with the gain node for volume
-        let gainNode;
-        if (sourceNode.buffer) {
-            // gainnode should be constant level to playback the buffer
-            gainNode = context.createGain();
-            gainNode.gain.value = convertToUnitInterval(volume)
-        } else {
-            // gainnode should follow the ADSR envelope defined in the synth
-            let output = buildGainNodeFromEnvelope(context, options);
-            gainNode = output.gainNode;
-            if (output.duration > duration) duration = output.duration;
-        }
-        gainNode.connect(context.destination);
-
-        // Add the filter node
-        let filterNode = context.createBiquadFilter();
-        filterNode.frequency.value = 44000;
-        if (sourceNode.buffer) {
-            filterNode.type = "lowpass";
-            filterNode.frequency.value = (sourceNode.buffer.sampleRate / 4) * convertToUnitInterval(filter);
-        }
-        filterNode.connect(gainNode);
-        sourceNode.connect(filterNode);
-
-        // start the source and null source
-        sourceNode.start(offset + context.currentTime);
-        nullSource.start(offset + context.currentTime);
-        if (duration) {
-            sourceNode.stop(context.currentTime + offset + duration);
-        }
-
-    }
-
-    const playSample = (context, samples, name, options, blockid) => {
-        let src = context.createBufferSource();
-        src.buffer = samples.get(name);
-        src.playbackRate.value = options.pitch || 1;
-
-        buildNodeTree(context, src, null, options, blockid);
-
-        return src.buffer.duration; // used for play sample until end block
-    }
-
-    const playNote = (context, note, duration, options, blockid) => {
-        let osc = context.createOscillator();
-        osc.type = "triangle";
-        if (options.synth) {
-            osc.type = options.synth.wave;
-        }
-        if (note.freq) {
-            osc.frequency.value = note.freq;
-        }
-        if (note.key) {
-            osc.frequency.value = notes[note.key + 8][1]; //offset for an 88 key piano
-        }
-
-        buildNodeTree(context, osc, duration, options, blockid);
-    }
-
-    const playChord = (context, notes, duration, options, blockid) => {
-        switch (options.arpeggio) {
-            case "all":
-                notes.forEach(note => playNote(context, note, duration, options, blockid));
-                break;
-            case "up":
-                notes.forEach(note => {
-                    playNote(context, note, duration / notes.length, options, blockid);
-                    sleep(context, duration / notes.length, options, blockid);
-                });
-                options.offset -= duration;
-                break;
-            case "down":
-                notes.reverse().forEach(note => {
-                    playNote(context, note, duration / notes.length, options, blockid);
-                    sleep(context, duration / notes.length, options, blockid);
-                });
-                options.offset -= duration;
-                break;
-            case "random":
-                let randomNotes = notes.map(value => ({value, sort: Math.random()}))
-                    .sort((a, b) => a.sort - b.sort)
-                    .map(({value}) => value);
-                randomNotes.forEach(note => {
-                    playNote(context, note, duration / notes.length, options, blockid);
-                    sleep(context, duration / notes.length, options, blockid);
-                });
-                options.offset -= duration;
-                break;
-            default:
-                notes.forEach(note => playNote(context, note, duration, options, blockid));
-        }
-
-    }
-
-    const sleep = (context, duration, options, blockid) => {
-        // Create a blank sleep source at 10Khz
-        let sleepSource = context.createBufferSource();
-        sleepSource.connect(context.destination);
-        sleepSource.buffer = context.createBuffer(1, duration * 10000, 10000);
-
-        buildNodeTree(context, sleepSource, duration, options, blockid);
-        options.offset += duration;
-    }
-
-
-    async function start() {
+    async function init() {
         console.log("Loading workspace from session storage");
         let jsonStr = sessionStorage.getItem("workspace");
         if (jsonStr) Blockly.serialization.workspaces.load(JSON.parse(jsonStr), workspace);
 
-        let context = new window.AudioContext();
-
-        let samples = new Map();
-
         let keyup_producer = new BroadcastChannel('keyup_channel');
-        let keyup_consumer = new BroadcastChannel('keyup_channel');
-        document.addEventListener('keyup', (e) => { console.log("GLOBAL"); keyup_producer.postMessage(e.key); });
-        let eventListeners = [];
+        document.addEventListener('keyup', (e) => {
+            console.log(`Global key press: ${e.key}`);
+            keyup_producer.postMessage(e.key);
+        });
 
-        document.getElementById("play").onclick = async () => {
+        playButton.onclick = async () => {
             console.log("play button pressed");
-
-            // Dynamically load the sample wav files required by the workspace
-            samples = await loadSamples(context, samples, findSamplesInWorkspace(sessionStorage.getItem("workspace")));
-
-            // Generate the required code
-            let code = Blockly.JavaScript.workspaceToCode(workspace);
-            console.log(code);
-
-            context = new window.AudioContext();
-            let options = {bpm: 100, offset: 0};
-            eval(code);
+            await play();
         }
 
-        document.getElementById("pause").onclick = () => {
+        pauseButton.onclick = () => {
             console.log("pause button pressed");
-            context.suspend();
+            pause();
         }
 
-        document.getElementById("resume").onclick = () => {
+        resumeButton.onclick = () => {
             console.log("resume button pressed");
-            context.resume();
+            resume();
         }
 
-        document.getElementById("stop").onclick = () => {
+        stopButton.onclick = () => {
             console.log("stop button pressed");
-            eventListeners.forEach( l => { keyup_consumer.removeEventListener('message', l); });
-            eventListeners = [];
-            context.close();
+            stop();
         }
 
         document.getElementById("debug").onclick = () => {
@@ -446,7 +289,7 @@
 
     }
 
-    start();
+    init();
 </script>
 </body>
 
