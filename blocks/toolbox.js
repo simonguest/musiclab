@@ -10,7 +10,7 @@ export let toolbox = {
                     "type": "controls_repeat_ext",
                     "inputs": {
                         "TIMES": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
@@ -24,7 +24,7 @@ export let toolbox = {
                     "type": "controls_for",
                     "inputs": {
                         "FROM": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
@@ -32,7 +32,7 @@ export let toolbox = {
                             }
                         },
                         "TO": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 10
@@ -40,7 +40,7 @@ export let toolbox = {
                             }
                         },
                         "BY": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
@@ -86,7 +86,7 @@ export let toolbox = {
                   "type":"math_random_int",
                   "inputs": {
                       "FROM": {
-                          "block": {
+                          "shadow": {
                               "type": "math_number",
                               "fields": {
                                   "NUM": 1
@@ -94,7 +94,7 @@ export let toolbox = {
                           }
                       },
                       "TO": {
-                          "block": {
+                          "shadow": {
                               "type": "math_number",
                               "fields": {
                                   "NUM": 100
@@ -130,7 +130,7 @@ export let toolbox = {
                     "type":"playNote",
                     "inputs": {
                         "DURATION": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
@@ -144,7 +144,7 @@ export let toolbox = {
                     "type":"playNoteUntilEnd",
                     "inputs": {
                         "DURATION": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
@@ -158,7 +158,7 @@ export let toolbox = {
                     "type":"playChord",
                     "inputs": {
                         "DURATION": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
@@ -172,7 +172,7 @@ export let toolbox = {
                     "type":"playChordUntilEnd",
                     "inputs": {
                         "DURATION": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
@@ -186,7 +186,7 @@ export let toolbox = {
                     "type":"playPianoKey",
                     "inputs": {
                         "KEY": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 40
@@ -194,7 +194,7 @@ export let toolbox = {
                             }
                         },
                         "DURATION": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
@@ -208,7 +208,7 @@ export let toolbox = {
                     "type":"playPianoKeyUntilEnd",
                     "inputs": {
                         "KEY": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 40
@@ -216,7 +216,7 @@ export let toolbox = {
                             }
                         },
                         "DURATION": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
@@ -230,7 +230,7 @@ export let toolbox = {
                     "type":"sleep",
                     "inputs": {
                         "DURATION": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
@@ -244,7 +244,7 @@ export let toolbox = {
                     "type":"sleepBeats",
                     "inputs": {
                         "DURATION": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
@@ -262,7 +262,7 @@ export let toolbox = {
                     "type":"volume",
                     "inputs": {
                         "VOLUME": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 100
@@ -276,7 +276,7 @@ export let toolbox = {
                     "type":"pitch",
                     "inputs": {
                         "PITCH": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 1
@@ -290,7 +290,7 @@ export let toolbox = {
                     "type":"bpm",
                     "inputs": {
                         "BPM": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 100
@@ -304,7 +304,7 @@ export let toolbox = {
                     "type":"filter",
                     "inputs": {
                         "FILTER": {
-                            "block": {
+                            "shadow": {
                                 "type": "math_number",
                                 "fields": {
                                     "NUM": 100
@@ -340,7 +340,7 @@ export let toolbox = {
               "type": "customSynth",
                   "inputs": {
                       "ATTACKLEVEL": {
-                          "block": {
+                          "shadow": {
                               "type": "math_number",
                               "fields": {
                                   "NUM": 1
@@ -348,7 +348,7 @@ export let toolbox = {
                           }
                       },
                       "ATTACKDURATION": {
-                          "block": {
+                          "shadow": {
                               "type": "math_number",
                               "fields": {
                                   "NUM": 0.01
@@ -356,7 +356,7 @@ export let toolbox = {
                           }
                       },
                       "DECAYLEVEL": {
-                          "block": {
+                          "shadow": {
                               "type": "math_number",
                               "fields": {
                                   "NUM": 0.35
@@ -364,7 +364,7 @@ export let toolbox = {
                           }
                       },
                       "DECAYDURATION": {
-                          "block": {
+                          "shadow": {
                               "type": "math_number",
                               "fields": {
                                   "NUM": 0.1
@@ -372,7 +372,7 @@ export let toolbox = {
                           }
                       },
                       "SUSTAINDURATION": {
-                          "block": {
+                          "shadow": {
                               "type": "math_number",
                               "fields": {
                                   "NUM": 0.1
@@ -380,7 +380,7 @@ export let toolbox = {
                           }
                       },
                       "RELEASEDURATION": {
-                          "block": {
+                          "shadow": {
                               "type": "math_number",
                               "fields": {
                                   "NUM": 0.3
