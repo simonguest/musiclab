@@ -219,9 +219,9 @@ ChordField.prototype.updateGraph_ = function () {
         this.imageElement_.querySelector(`[id="${ChordField.NOTES[i]}"]`).classList.add("selected");
     })
 
-    // scroll to the right region on the piano, if needed
+    // scroll to the right region on the piano, if needed (but only on first render)
     let octaves = this.imageElement_.getElementsByClassName("octaves")[0];
-    if (indexes.length > 0) {
+    if (indexes.length > 0 && octaves.getAttribute('style') === null) {
         let newOctave = parseInt(ChordField.NOTES[indexes[0]].match(/\d+/)[0]);
 
         if (octaves) {

@@ -206,7 +206,7 @@
         if (jsonStr) Blockly.serialization.workspaces.load(JSON.parse(jsonStr), workspace);
 
         let keyup_producer = new BroadcastChannel('keyup_channel');
-        document.addEventListener('keyup', (e) => {
+        document.addEventListener('keydown', (e) => {
             console.log(`Global key press: ${e.key}`);
             keyup_producer.postMessage(e.key);
         });
