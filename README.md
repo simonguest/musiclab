@@ -12,6 +12,8 @@ Under the covers, the prototype uses [Google's Blockly](https://github.com/googl
 
 Example workspaces can be found in the "Example Workspaces..." dropdown at the top of the screen.
 
+![Screenshot 2023-01-31 at 8 28 17 PM](https://user-images.githubusercontent.com/769225/215948389-bd661ab6-ba1a-4325-87e5-f7be8dd36247.png)
+
 # Building and Running Locally
 
 To run the prototype locally, clone the repo and host either through an IDE (e.g., VS Code Live Server) or using a simple Python web server: ```python3 -m http.server```
