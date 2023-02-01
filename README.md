@@ -8,7 +8,7 @@ You can access the prototype here: https://simonguest.github.io/musiclab/
 
 The prototype supports a small selection of samples, notes, chords, and basic synths. Students use computer science concepts such as conditionals, loops, logic, variables, and functions to create tracks, put together note sequences, and other musical concepts.
 
-Under the covers, the prototype uses [Google's Blockly](https://github.com/google/blockly) and makes direct calls to the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) for all audio operations. All public domain samples and effects source from [freesound.org](https://freesound.org/).
+Under the covers, the prototype uses [Google's Blockly](https://github.com/google/blockly) and makes direct calls to the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) for all audio operations. All public domain samples and effects sourced from [freesound.org](https://freesound.org/).
 
 Example workspaces can be found in the "Example Workspaces..." dropdown at the top of the screen.
 
