@@ -1,6 +1,6 @@
 # MusicLab Prototype
 
-**Update: MusicLab is actively being developed as a Code.org incubator project! You can access the latest version of Music Lab and provide feedback [here](https://studio.code.org/musiclab).** 
+**Update: MusicLab is actively being developed as a Code.org incubator project! You can access the latest version of MusicLab and provide feedback [here](https://studio.code.org/musiclab).** 
 
 MusicLab is a prototype that shows how students (grades 5-12) can use block-based programming to create their own audio and music tracks. 
 
